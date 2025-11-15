@@ -28,15 +28,23 @@ export async function GET(
       description: post.description,
       content: post.content,
       published: post.published,
-      publishedAt: post.publishedAt,
-      createdAt: post.createdAt,
-      updatedAt: post.updatedAt,
+      publishedAt: post.publishedAt?.toISOString() || null,
+      createdAt: post.createdAt.toISOString(),
+      updatedAt: post.updatedAt.toISOString(),
       views: post.views,
       tags: post.tags.map((tag) => tag.name),
     });
   } catch (error) {
     console.error('Error fetching post:', error);
-    return NextResponse.json({ error: '获取文章失败' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : '未知错误';
+    console.error('Error details:', { errorMessage });
+    return NextResponse.json(
+      { 
+        error: '获取文章失败',
+        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -123,14 +131,22 @@ export async function PUT(
       description: post.description,
       content: post.content,
       published: post.published,
-      publishedAt: post.publishedAt,
-      createdAt: post.createdAt,
-      updatedAt: post.updatedAt,
+      publishedAt: post.publishedAt?.toISOString() || null,
+      createdAt: post.createdAt.toISOString(),
+      updatedAt: post.updatedAt.toISOString(),
       tags: post.tags.map((tag) => tag.name),
     });
   } catch (error) {
     console.error('Error updating post:', error);
-    return NextResponse.json({ error: '更新文章失败' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : '未知错误';
+    console.error('Error details:', { errorMessage });
+    return NextResponse.json(
+      { 
+        error: '更新文章失败',
+        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+      },
+      { status: 500 }
+    );
   }
 }
 

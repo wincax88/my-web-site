@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+// 强制动态渲染，避免构建时静态分析
+export const dynamic = 'force-dynamic';
+
 // 获取所有文章
 export async function GET(request: NextRequest) {
   try {
@@ -38,9 +41,9 @@ export async function GET(request: NextRequest) {
         title: post.title,
         description: post.description,
         published: post.published,
-        publishedAt: post.publishedAt,
-        createdAt: post.createdAt,
-        updatedAt: post.updatedAt,
+        publishedAt: post.publishedAt?.toISOString() || null,
+        createdAt: post.createdAt.toISOString(),
+        updatedAt: post.updatedAt.toISOString(),
         views: post.views,
         tags: post.tags.map((tag) => tag.name),
         commentsCount: post._count.comments,
@@ -52,7 +55,16 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching posts:', error);
-    return NextResponse.json({ error: '获取文章列表失败' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : '未知错误';
+    const errorStack = error instanceof Error ? error.stack : undefined;
+    console.error('Error details:', { errorMessage, errorStack });
+    return NextResponse.json(
+      { 
+        error: '获取文章列表失败',
+        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+      },
+      { status: 500 }
+    );
   }
 }
 
@@ -122,15 +134,23 @@ export async function POST(request: NextRequest) {
         description: post.description,
         content: post.content,
         published: post.published,
-        publishedAt: post.publishedAt,
-        createdAt: post.createdAt,
-        updatedAt: post.updatedAt,
+        publishedAt: post.publishedAt?.toISOString() || null,
+        createdAt: post.createdAt.toISOString(),
+        updatedAt: post.updatedAt.toISOString(),
         tags: post.tags.map((tag) => tag.name),
       },
       { status: 201 }
     );
   } catch (error) {
     console.error('Error creating post:', error);
-    return NextResponse.json({ error: '创建文章失败' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : '未知错误';
+    console.error('Error details:', { errorMessage });
+    return NextResponse.json(
+      { 
+        error: '创建文章失败',
+        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+      },
+      { status: 500 }
+    );
   }
 }
