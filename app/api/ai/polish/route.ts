@@ -78,8 +78,8 @@ ${content}
     }
 
     const completion = await openai.chat.completions.create({
-    //   model: 'gpt-4o-mini',
-      model: "deepseek-chat",
+      //   model: 'gpt-4o-mini',
+      model: 'deepseek-chat',
       messages: [
         {
           role: 'system',

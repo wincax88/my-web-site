@@ -25,6 +25,8 @@ export function PostForm({ post, onClose, onSave }: PostFormProps) {
   const [aiLoading, setAiLoading] = useState<string | null>(null);
   const [showGenerateMenu, setShowGenerateMenu] = useState(false);
   const [showPolishMenu, setShowPolishMenu] = useState(false);
+  const [showTopicInput, setShowTopicInput] = useState(false);
+  const [topic, setTopic] = useState('');
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
@@ -62,6 +64,54 @@ export function PostForm({ post, onClose, onSave }: PostFormProps) {
       title,
       slug: prev.slug || generateSlug(title),
     }));
+  };
+
+  const handleGenerateAll = async () => {
+    if (!topic.trim()) {
+      setError('请输入文章主题');
+      return;
+    }
+
+    setError('');
+    setAiLoading('generate-all');
+    setShowTopicInput(false);
+
+    try {
+      const response = await fetch('/api/ai/generate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          type: 'all',
+          topic: topic.trim(),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || 'AI 生成失败');
+        return;
+      }
+
+      // 填充所有字段
+      setFormData({
+        title: data.title || '',
+        slug: data.slug || '',
+        description: data.description || '',
+        content: data.content || '',
+        tags: Array.isArray(data.tags) ? data.tags.join(', ') : '',
+        published: false,
+      });
+
+      setTopic('');
+    } catch (err) {
+      console.error('Error generating all fields:', err);
+      setError('AI 生成失败，请稍后重试');
+    } finally {
+      setAiLoading(null);
+    }
   };
 
   const handleGenerate = async (type: 'description' | 'outline' | 'full') => {
@@ -213,6 +263,83 @@ export function PostForm({ post, onClose, onSave }: PostFormProps) {
           <X className="h-5 w-5" />
         </button>
       </div>
+
+      {!post && (
+        <div className="mb-6">
+          <div className="relative">
+            {showTopicInput ? (
+              <div className="flex items-center gap-2 rounded-lg border border-blue-300 bg-blue-50 p-4 dark:border-blue-700 dark:bg-blue-900/20">
+                <input
+                  type="text"
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleGenerateAll();
+                    } else if (e.key === 'Escape') {
+                      setShowTopicInput(false);
+                      setTopic('');
+                    }
+                  }}
+                  placeholder="输入文章主题，例如：现代代码调试与性能优化"
+                  className="flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900"
+                  autoFocus
+                />
+                <button
+                  type="button"
+                  onClick={handleGenerateAll}
+                  disabled={aiLoading === 'generate-all' || !topic.trim()}
+                  className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  {aiLoading === 'generate-all' ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span>生成中...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="h-4 w-4" />
+                      <span>生成</span>
+                    </>
+                  )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowTopicInput(false);
+                    setTopic('');
+                  }}
+                  className="rounded-lg px-3 py-2 text-gray-600 transition-colors hover:bg-gray-200 dark:text-gray-400 dark:hover:bg-gray-700"
+                >
+                  取消
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => setShowTopicInput(true)}
+                disabled={aiLoading !== null}
+                className="flex w-full items-center justify-center gap-2 rounded-lg border-2 border-dashed border-blue-300 bg-blue-50 px-6 py-4 text-blue-700 transition-colors hover:border-blue-400 hover:bg-blue-100 disabled:cursor-not-allowed disabled:opacity-50 dark:border-blue-700 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:border-blue-600 dark:hover:bg-blue-900/30"
+              >
+                {aiLoading === 'generate-all' ? (
+                  <>
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <span className="font-medium">AI 正在生成全部字段...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-5 w-5" />
+                    <span className="font-medium">
+                      AI 生成全部字段（标题+Slug+描述+内容+标签）
+                    </span>
+                  </>
+                )}
+              </button>
+            )}
+          </div>
+        </div>
+      )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>

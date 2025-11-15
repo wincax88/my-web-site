@@ -68,21 +68,25 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
                 )}
                 onClick={(e) => {
                   e.preventDefault();
-                  
+
                   // 尝试多种方式查找元素
                   let element = document.getElementById(heading.id);
-                  
+
                   // 如果直接找不到，尝试查找包含该 ID 的 anchor 标签（rehypeAutolinkHeadings 可能包裹了标题）
                   if (!element) {
-                    const anchor = document.querySelector(`a[id="${heading.id}"]`);
+                    const anchor = document.querySelector(
+                      `a[id="${heading.id}"]`
+                    );
                     if (anchor) {
                       element = anchor as HTMLElement;
                     }
                   }
-                  
+
                   // 如果还是找不到，尝试查找标题元素（可能 ID 在子元素上）
                   if (!element) {
-                    const headings = document.querySelectorAll('h1, h2, h3, h4, h5, h6');
+                    const headings = document.querySelectorAll(
+                      'h1, h2, h3, h4, h5, h6'
+                    );
                     for (const h of Array.from(headings)) {
                       if (h.textContent?.trim() === heading.text) {
                         element = h as HTMLElement;
@@ -90,7 +94,7 @@ export function TableOfContents({ headings }: TableOfContentsProps) {
                       }
                     }
                   }
-                  
+
                   if (element) {
                     // 使用 scrollIntoView，配合 CSS 的 scroll-mt-20 来正确偏移
                     element.scrollIntoView({

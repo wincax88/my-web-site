@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
@@ -61,7 +61,7 @@ export default function AdminPostsPage() {
     }
   };
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(
@@ -79,11 +79,11 @@ export default function AdminPostsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [page, includeDrafts]);
 
   useEffect(() => {
     fetchPosts();
-  }, [page, includeDrafts]);
+  }, [fetchPosts]);
 
   const handleDelete = async (id: string) => {
     if (!confirm('确定要删除这篇文章吗？此操作不可撤销。')) {
@@ -204,28 +204,28 @@ export default function AdminPostsPage() {
             <table className="w-full border-collapse border border-gray-300 dark:border-gray-700">
               <thead>
                 <tr className="bg-gray-100 dark:bg-gray-800">
-                  <th className="border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
+                  <th className="w-[25%] border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
                     标题
                   </th>
-                  <th className="border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
+                  <th className="w-[15%] border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
                     Slug
                   </th>
-                  <th className="border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
+                  <th className="w-[8%] border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
                     状态
                   </th>
-                  <th className="border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
+                  <th className="w-[15%] border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
                     标签
                   </th>
-                  <th className="border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
+                  <th className="w-[8%] border border-gray-300 bg-blue-100 px-4 py-2 text-left dark:border-gray-700 dark:bg-blue-900/30">
                     浏览量
                   </th>
-                  <th className="border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
+                  <th className="w-[8%] border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
                     评论数
                   </th>
-                  <th className="border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
+                  <th className="w-[12%] border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
                     创建时间
                   </th>
-                  <th className="border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
+                  <th className="w-[9%] border border-gray-300 px-4 py-2 text-left dark:border-gray-700">
                     操作
                   </th>
                 </tr>
@@ -243,7 +243,7 @@ export default function AdminPostsPage() {
                       </div>
                     </td>
                     <td className="border border-gray-300 px-4 py-2 text-sm text-gray-600 dark:border-gray-700 dark:text-gray-400">
-                      {post.slug}
+                      <div className="truncate">{post.slug}</div>
                     </td>
                     <td className="border border-gray-300 px-4 py-2 dark:border-gray-700">
                       <span
@@ -273,7 +273,7 @@ export default function AdminPostsPage() {
                         )}
                       </div>
                     </td>
-                    <td className="border border-gray-300 px-4 py-2 text-sm dark:border-gray-700">
+                    <td className="border border-gray-300 bg-blue-50 px-4 py-2 text-sm dark:border-gray-700 dark:bg-blue-900/20">
                       {post.views}
                     </td>
                     <td className="border border-gray-300 px-4 py-2 text-sm dark:border-gray-700">
