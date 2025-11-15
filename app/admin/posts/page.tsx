@@ -80,9 +80,22 @@ export default function AdminPostsPage() {
     }
   };
 
-  const handleEdit = (post: Post) => {
-    setEditingPost(post);
-    setShowForm(true);
+  const handleEdit = async (post: Post) => {
+    try {
+      // 获取完整的文章数据（包括 content）
+      const response = await fetch(`/api/admin/posts/${post.id}`);
+      if (response.ok) {
+        const fullPost = await response.json();
+        setEditingPost(fullPost);
+        setShowForm(true);
+      } else {
+        const data = await response.json();
+        alert(data.error || '获取文章详情失败');
+      }
+    } catch (error) {
+      console.error('Error fetching post details:', error);
+      alert('获取文章详情失败');
+    }
   };
 
   const handleNew = () => {
