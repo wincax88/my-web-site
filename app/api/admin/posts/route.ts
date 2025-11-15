@@ -14,9 +14,6 @@ export async function GET(request: NextRequest) {
 
     const where = includeDrafts ? {} : { published: true };
 
-    // 确保数据库连接正常
-    await prisma.$connect();
-
     const [posts, total] = await Promise.all([
       prisma.post.findMany({
         where,
@@ -62,11 +59,19 @@ export async function GET(request: NextRequest) {
     const errorStack = error instanceof Error ? error.stack : undefined;
     const errorName = error instanceof Error ? error.name : 'UnknownError';
 
+    // 检查是否是 SQLite 相关错误（在 Vercel 上常见）
+    const isSqliteError =
+      errorMessage.includes('SQLite') ||
+      errorMessage.includes('ENOENT') ||
+      errorMessage.includes('read-only') ||
+      errorMessage.includes('file system');
+
     // 记录完整的错误信息
     console.error('Error details:', {
       errorMessage,
       errorStack,
       errorName,
+      isSqliteError,
       error: error instanceof Error ? error : String(error),
     });
 
@@ -76,6 +81,9 @@ export async function GET(request: NextRequest) {
         error: '获取文章列表失败',
         message: errorMessage,
         name: errorName,
+        ...(isSqliteError && {
+          hint: 'SQLite 在 Vercel 上无法工作，请使用 PostgreSQL 或其他云数据库',
+        }),
         ...(process.env.NODE_ENV === 'development' && { stack: errorStack }),
       },
       { status: 500 }
