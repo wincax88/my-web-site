@@ -6,17 +6,27 @@ export const dynamic = 'force-dynamic';
 // 设置最大执行时间为 60 秒（用于润色长文章）
 export const maxDuration = 60;
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  baseURL: process.env.OPENAI_BASE_URL,
-  timeout: 50000, // 50 秒超时
-});
+// 延迟初始化 OpenAI 客户端，避免构建时错误
+function getOpenAIClient() {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error('未配置 OpenAI API Key');
+  }
+  return new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+    baseURL: process.env.OPENAI_BASE_URL,
+    timeout: 50000, // 50 秒超时
+  });
+}
 
 export async function POST(request: NextRequest) {
   try {
     const { content, type } = await request.json();
 
-    if (!process.env.OPENAI_API_KEY) {
+    // 获取 OpenAI 客户端（会检查 API Key）
+    let openai: OpenAI;
+    try {
+      openai = getOpenAIClient();
+    } catch (error) {
       return NextResponse.json(
         { error: '未配置 OpenAI API Key' },
         { status: 500 }
