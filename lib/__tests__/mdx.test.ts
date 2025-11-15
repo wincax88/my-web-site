@@ -17,13 +17,13 @@ describe('MDX Utils', () => {
     vi.clearAllMocks();
   });
 
-  it('应该返回空数组当目录不存在时', () => {
+  it('应该返回空数组当目录不存在时', async () => {
     vi.mocked(fs.existsSync).mockReturnValue(false);
-    const posts = getAllPosts();
+    const posts = await getAllPosts();
     expect(posts).toEqual([]);
   });
 
-  it('应该正确解析 MDX 文件', () => {
+  it('应该正确解析 MDX 文件', async () => {
     const mockFileContent = `---
 title: "测试文章"
 description: "测试描述"
@@ -39,7 +39,7 @@ slug: "test-post"
     vi.mocked(fs.readdirSync).mockReturnValue(['test-post.mdx'] as any);
     vi.mocked(fs.readFileSync).mockReturnValue(mockFileContent);
 
-    const posts = getAllPosts();
+    const posts = await getAllPosts();
     expect(posts.length).toBeGreaterThan(0);
     expect(posts[0].title).toBe('测试文章');
   });

@@ -11,6 +11,7 @@ interface Post {
   slug: string;
   title: string;
   description: string;
+  content: string | null;
   published: boolean;
   publishedAt: string | null;
   createdAt: string;

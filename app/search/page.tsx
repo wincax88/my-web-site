@@ -109,7 +109,7 @@ export default function SearchPage() {
       )}
 
       <div className="space-y-4">
-        {searchResults.map((result) => (
+        {searchResults.map((result: SearchIndexItem & { score?: number }) => (
           <Link
             key={result.slug}
             href={`/blog/${result.slug}`}
@@ -125,7 +125,7 @@ export default function SearchPage() {
               <time dateTime={result.date}>{formatDate(result.date)}</time>
               {result.tags && result.tags.length > 0 && (
                 <div className="flex gap-2">
-                  {result.tags.slice(0, 3).map((tag) => (
+                  {result.tags.slice(0, 3).map((tag: string) => (
                     <span
                       key={tag}
                       className="px-2 py-1 bg-gray-100 dark:bg-gray-800 rounded"

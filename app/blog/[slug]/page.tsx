@@ -24,7 +24,7 @@ const rehypePlugins = [
       },
     },
   ],
-] as const;
+];
 
 // 生成静态路径
 export async function generateStaticParams() {
@@ -194,6 +194,7 @@ export default async function BlogPostPage({
                   mdxOptions: {
                     development: false,
                     remarkPlugins: [remarkGfm],
+                    // @ts-expect-error - rehype plugin types are incompatible
                     rehypePlugins,
                   },
                 }}
