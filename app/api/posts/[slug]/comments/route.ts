@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+// 强制动态渲染，避免构建时静态分析
+export const dynamic = 'force-dynamic';
+
 // 简单的内存限流（生产环境应使用 Redis 等）
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 

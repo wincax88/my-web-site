@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 
+// 强制动态渲染，避免构建时静态分析
+export const dynamic = 'force-dynamic';
+
 // 获取单篇文章
 export async function GET(
   request: NextRequest,
