@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { getAllPosts } from '@/lib/mdx';
 
 export async function GET() {
-  const posts = getAllPosts();
+  const posts = await getAllPosts();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
 
   const rss = `<?xml version="1.0" encoding="UTF-8"?>

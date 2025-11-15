@@ -1,9 +1,10 @@
 import { notFound } from 'next/navigation';
-import { getPostBySlug, getAllPosts } from '@/lib/mdx';
 import { formatDate } from '@/lib/utils';
 import { extractHeadings } from '@/lib/toc';
 import { MDXRemote } from 'next-mdx-remote/rsc';
 import remarkGfm from 'remark-gfm';
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { TableOfContents } from '@/components/TableOfContents';
 import { ShareButtons } from '@/components/ShareButtons';
 import { CodeBlock } from '@/components/CodeBlock';
@@ -11,9 +12,24 @@ import { Comments } from '@/components/Comments';
 import type { Metadata } from 'next';
 import type { PostType } from '@/types/post';
 
+// 准备 rehype 插件配置
+const rehypePlugins = [
+  rehypeSlug,
+  [
+    rehypeAutolinkHeadings,
+    {
+      behavior: 'wrap',
+      properties: {
+        className: ['anchor'],
+      },
+    },
+  ],
+] as const;
+
 // 生成静态路径
 export async function generateStaticParams() {
-  const posts = getAllPosts();
+  const { getAllPosts } = await import('@/lib/mdx');
+  const posts = await getAllPosts();
   return posts.map((post) => ({
     slug: post.slug,
   }));
@@ -25,7 +41,8 @@ export async function generateMetadata({
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const post = getPostBySlug(params.slug);
+  const { getPostBySlug } = await import('@/lib/mdx');
+  const post = await getPostBySlug(params.slug);
 
   if (!post) {
     return {
@@ -110,12 +127,13 @@ const createMdxComponents = () => ({
   ),
 });
 
-export default function BlogPostPage({
+export default async function BlogPostPage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const post = getPostBySlug(params.slug);
+  const { getPostBySlug } = await import('@/lib/mdx');
+  const post = await getPostBySlug(params.slug);
 
   if (!post) {
     notFound();
@@ -168,31 +186,20 @@ export default function BlogPostPage({
           )}
 
           <div className="prose prose-lg dark:prose-invert max-w-none">
-            {post.content && (
+            {post.content && post.content.trim() ? (
               <MDXRemote
                 source={post.content}
                 components={mdxComponents}
                 options={{
                   mdxOptions: {
+                    development: false,
                     remarkPlugins: [remarkGfm],
-                    rehypePlugins: [
-                      [
-                        require('rehype-slug'),
-                        {},
-                      ],
-                      [
-                        require('rehype-autolink-headings'),
-                        {
-                          behavior: 'wrap',
-                          properties: {
-                            className: ['anchor'],
-                          },
-                        },
-                      ],
-                    ],
+                    rehypePlugins,
                   },
                 }}
               />
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400">暂无内容</p>
             )}
           </div>
 

@@ -3,11 +3,11 @@ import { getAllPosts, getAllTags } from '@/lib/mdx';
 import { Card } from '@/components/Card';
 import { ArrowRight, BookOpen, Code, Lightbulb } from 'lucide-react';
 
-export default function Home() {
-  const allPosts = getAllPosts();
+export default async function Home() {
+  const allPosts = await getAllPosts();
   const featuredPosts = allPosts.slice(0, 3);
   const latestPosts = allPosts.slice(0, 6);
-  const tags = getAllTags().slice(0, 20);
+  const tags = (await getAllTags()).slice(0, 20);
 
   return (
     <main className="min-h-screen">

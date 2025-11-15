@@ -11,8 +11,8 @@ export interface SearchIndexItem {
 }
 
 // 构建搜索索引（在构建时生成）
-export function buildSearchIndex(): SearchIndexItem[] {
-  const posts = getAllPosts();
+export async function buildSearchIndex(): Promise<SearchIndexItem[]> {
+  const posts = await getAllPosts();
   
   return posts.map((post) => ({
     slug: post.slug,
@@ -25,8 +25,8 @@ export function buildSearchIndex(): SearchIndexItem[] {
 }
 
 // 生成搜索索引 JSON（用于客户端）
-export function generateSearchIndexJSON(): string {
-  const index = buildSearchIndex();
+export async function generateSearchIndexJSON(): Promise<string> {
+  const index = await buildSearchIndex();
   return JSON.stringify(index);
 }
 

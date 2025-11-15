@@ -17,6 +17,7 @@ const navLinks: NavLink[] = [
   { label: '教程', href: '/courses' },
   { label: '项目', href: '/projects' },
   { label: '关于', href: '/about' },
+  { label: '管理', href: '/admin/posts' },
 ];
 
 export function Navbar() {

@@ -1,11 +1,11 @@
 import Link from 'next/link';
-import { getPostsByTag, getAllTags } from '@/lib/mdx';
 import { formatDate } from '@/lib/utils';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
 
 export async function generateStaticParams() {
-  const tags = getAllTags();
+  const { getAllTags } = await import('@/lib/mdx');
+  const tags = await getAllTags();
   return tags.map((tag) => ({
     tag: tag,
   }));
@@ -23,9 +23,10 @@ export async function generateMetadata({
   };
 }
 
-export default function TagPage({ params }: { params: { tag: string } }) {
+export default async function TagPage({ params }: { params: { tag: string } }) {
   const decodedTag = decodeURIComponent(params.tag);
-  const posts = getPostsByTag(decodedTag);
+  const { getPostsByTag } = await import('@/lib/mdx');
+  const posts = await getPostsByTag(decodedTag);
 
   if (posts.length === 0) {
     notFound();

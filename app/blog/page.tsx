@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { getAllPosts, getPaginatedPosts } from '@/lib/mdx';
+import { getPaginatedPosts } from '@/lib/mdx';
 import { formatDate } from '@/lib/utils';
 import type { Metadata } from 'next';
 
@@ -8,13 +8,13 @@ export const metadata: Metadata = {
   description: '技术博客文章列表',
 };
 
-export default function BlogPage({
+export default async function BlogPage({
   searchParams,
 }: {
   searchParams: { page?: string };
 }) {
   const currentPage = parseInt(searchParams.page || '1', 10);
-  const { posts, totalPages } = getPaginatedPosts(currentPage, 10);
+  const { posts, totalPages } = await getPaginatedPosts(currentPage, 10);
 
   return (
     <div className="container mx-auto px-4 py-8">

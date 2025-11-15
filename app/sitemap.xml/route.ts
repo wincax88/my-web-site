@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server';
 import { getAllPosts, getAllTags } from '@/lib/mdx';
 
 export async function GET() {
-  const posts = getAllPosts();
-  const tags = getAllTags();
+  const posts = await getAllPosts();
+  const tags = await getAllTags();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
 
   const staticPages = [

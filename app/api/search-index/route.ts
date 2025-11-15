@@ -3,7 +3,7 @@ import { generateSearchIndexJSON } from '@/lib/search';
 
 export async function GET() {
   try {
-    const index = generateSearchIndexJSON();
+    const index = await generateSearchIndexJSON();
     return new NextResponse(index, {
       headers: {
         'Content-Type': 'application/json',
