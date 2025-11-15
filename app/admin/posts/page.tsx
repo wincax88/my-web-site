@@ -2,8 +2,10 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { formatDate } from '@/lib/utils';
 import { PostForm } from '@/components/PostForm';
+import { LoginModal } from '@/components/LoginModal';
 import { Loader2, Plus, Edit, Trash2, Eye } from 'lucide-react';
 
 interface Post {
@@ -30,6 +32,34 @@ export default function AdminPostsPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [includeDrafts, setIncludeDrafts] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const router = useRouter();
+
+  // 检查登录状态
+  useEffect(() => {
+    const checkLogin = () => {
+      const loggedIn = sessionStorage.getItem('adminLoggedIn') === 'true';
+      setIsLoggedIn(loggedIn);
+      if (!loggedIn) {
+        setShowLoginModal(true);
+      }
+    };
+
+    checkLogin();
+  }, []);
+
+  const handleLoginSuccess = () => {
+    setIsLoggedIn(true);
+    setShowLoginModal(false);
+  };
+
+  const handleLoginClose = () => {
+    // 如果关闭登录窗口且未登录，返回首页
+    if (!isLoggedIn) {
+      router.push('/');
+    }
+  };
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -108,6 +138,17 @@ export default function AdminPostsPage() {
     setEditingPost(null);
     fetchPosts();
   };
+
+  // 如果未登录，显示登录窗口
+  if (!isLoggedIn) {
+    return (
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={handleLoginClose}
+        onSuccess={handleLoginSuccess}
+      />
+    );
+  }
 
   if (showForm) {
     return (

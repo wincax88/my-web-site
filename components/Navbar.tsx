@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Menu, X, Search } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
+import { LoginModal } from './LoginModal';
 import { cn } from '@/lib/utils';
 
 interface NavLink {
@@ -22,6 +24,23 @@ const navLinks: NavLink[] = [
 
 export function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const router = useRouter();
+
+  const handleAdminClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    // 检查是否已登录
+    const isLoggedIn = sessionStorage.getItem('adminLoggedIn') === 'true';
+    if (isLoggedIn) {
+      router.push('/admin/posts');
+    } else {
+      setShowLoginModal(true);
+    }
+  };
+
+  const handleLoginSuccess = () => {
+    router.push('/admin/posts');
+  };
 
   return (
     <nav className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/80">
@@ -34,15 +53,28 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden items-center gap-6 md:flex">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-gray-700 transition-colors hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              if (link.label === '管理') {
+                return (
+                  <button
+                    key={link.href}
+                    onClick={handleAdminClick}
+                    className="text-gray-700 transition-colors hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+                  >
+                    {link.label}
+                  </button>
+                );
+              }
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-gray-700 transition-colors hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Right Actions */}
@@ -77,19 +109,42 @@ export function Navbar() {
           )}
         >
           <div className="flex flex-col gap-2 pt-4">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={() => setMobileMenuOpen(false)}
-                className="rounded-lg px-4 py-2 text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
-              >
-                {link.label}
-              </Link>
-            ))}
+            {navLinks.map((link) => {
+              if (link.label === '管理') {
+                return (
+                  <button
+                    key={link.href}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setMobileMenuOpen(false);
+                      handleAdminClick(e);
+                    }}
+                    className="rounded-lg px-4 py-2 text-left text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                  >
+                    {link.label}
+                  </button>
+                );
+              }
+              return (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="rounded-lg px-4 py-2 text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                >
+                  {link.label}
+                </Link>
+              );
+            })}
           </div>
         </div>
       </div>
+
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        onSuccess={handleLoginSuccess}
+      />
     </nav>
   );
 }
