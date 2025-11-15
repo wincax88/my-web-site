@@ -39,9 +39,10 @@ export async function GET(
     const errorMessage = error instanceof Error ? error.message : '未知错误';
     console.error('Error details:', { errorMessage });
     return NextResponse.json(
-      { 
+      {
         error: '获取文章失败',
-        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+        details:
+          process.env.NODE_ENV === 'development' ? errorMessage : undefined,
       },
       { status: 500 }
     );
@@ -141,9 +142,10 @@ export async function PUT(
     const errorMessage = error instanceof Error ? error.message : '未知错误';
     console.error('Error details:', { errorMessage });
     return NextResponse.json(
-      { 
+      {
         error: '更新文章失败',
-        details: process.env.NODE_ENV === 'development' ? errorMessage : undefined
+        details:
+          process.env.NODE_ENV === 'development' ? errorMessage : undefined,
       },
       { status: 500 }
     );

@@ -50,11 +50,11 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
   };
 
   return (
-    <div 
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm h-screen"
+    <div
+      className="fixed inset-0 z-[100] flex h-screen items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
       onClick={handleClose}
     >
-      <div 
+      <div
         className="relative w-full max-w-md rounded-lg bg-white p-6 shadow-2xl dark:bg-gray-800"
         onClick={(e) => e.stopPropagation()}
       >
@@ -134,4 +134,3 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
     </div>
   );
 }
-
