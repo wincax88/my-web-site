@@ -8,8 +8,8 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-geist-sans' });
 
 export const metadata: Metadata = {
   title: {
-    default: '我的个人网站',
-    template: '%s | 我的个人网站',
+    default: '函数志',
+    template: '%s | 函数志',
   },
   description: '编程教程与技术博客',
   keywords: ['编程', '教程', '技术博客', 'Next.js', 'React'],
@@ -19,13 +19,13 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'zh_CN',
     url: process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev',
-    siteName: '我的个人网站',
-    title: '我的个人网站',
+    siteName: '函数志',
+    title: '函数志',
     description: '编程教程与技术博客',
   },
   twitter: {
     card: 'summary_large_image',
-    title: '我的个人网站',
+    title: '函数志',
     description: '编程教程与技术博客',
   },
   robots: {

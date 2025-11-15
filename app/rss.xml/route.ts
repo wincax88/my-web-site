@@ -8,7 +8,7 @@ export async function GET() {
   const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>我的个人网站</title>
+    <title>函数志</title>
     <link>${siteUrl}</link>
     <description>编程教程与技术博客</description>
     <language>zh-CN</language>

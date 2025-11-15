@@ -2,6 +2,10 @@
   "name": "my-web-site",
   "version": "0.1.0",
   "private": true,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Michael8968/my-web-site.git"
+  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",

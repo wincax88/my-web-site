@@ -15,7 +15,7 @@ export default function Home() {
       <section className="container mx-auto px-4 py-20">
         <div className="max-w-3xl mx-auto text-center">
           <h1 className="text-5xl md:text-6xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            欢迎来到我的个人网站
+            欢迎来到函数志
           </h1>
           <p className="text-xl text-gray-600 dark:text-gray-400 mb-8">
             分享编程教程、技术博客和开发经验

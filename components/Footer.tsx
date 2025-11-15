@@ -60,7 +60,7 @@ export function Footer() {
             <h3 className="text-lg font-semibold mb-4">关注我</h3>
             <div className="flex gap-4">
               <a
-                href="https://github.com"
+                href="https://github.com/Michael8968/my-web-site"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
@@ -69,7 +69,7 @@ export function Footer() {
                 <Github className="w-5 h-5" />
               </a>
               <a
-                href="https://twitter.com"
+                href="https://twitter.com/Wincax1"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
@@ -78,7 +78,7 @@ export function Footer() {
                 <Twitter className="w-5 h-5" />
               </a>
               <a
-                href="mailto:your@email.com"
+                href="mailto:wincax@gmail.com"
                 className="p-2 rounded-lg bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 transition-colors"
                 aria-label="Email"
               >
@@ -89,7 +89,7 @@ export function Footer() {
         </div>
 
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-800 text-center text-sm text-gray-600 dark:text-gray-400">
-          <p>© {currentYear} 我的个人网站. 保留所有权利.</p>
+          <p>© {currentYear} 函数志. 保留所有权利.</p>
         </div>
       </div>
     </footer>
