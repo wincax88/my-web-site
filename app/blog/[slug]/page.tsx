@@ -30,7 +30,28 @@ const rehypePlugins = [
 export async function generateStaticParams() {
   const { getAllPosts } = await import('@/lib/mdx');
   const posts = await getAllPosts();
-  return posts.map((post) => ({
+
+  // 验证每个文章的内容，只返回可以编译的文章
+  const validPosts = [];
+  for (const post of posts) {
+    if (post.content && post.content.trim()) {
+      // 检查是否有明显的 MDX 语法错误
+      // 1. 以数字开头的 JSX 属性名: <div 1prop="value">
+      // 2. 以数字开头的组件名: <1Component />
+      const hasInvalidAttribute = /<\w+[^>]*\s\d+\w*\s*=/g.test(post.content);
+      const hasInvalidComponent = /<\d+\w+/g.test(post.content);
+
+      if (hasInvalidAttribute || hasInvalidComponent) {
+        console.warn(
+          `跳过可能有 MDX 语法错误的文章: ${post.slug} (检测到以数字开头的 JSX 属性或组件名)`
+        );
+        continue;
+      }
+    }
+    validPosts.push(post);
+  }
+
+  return validPosts.map((post) => ({
     slug: post.slug,
   }));
 }
@@ -145,6 +166,59 @@ const createMdxComponents = () => ({
   ),
 });
 
+// MDX 内容组件，带错误处理
+async function MdxContentWithErrorHandling({
+  content,
+  components,
+}: {
+  content: string;
+  components: ReturnType<typeof createMdxComponents>;
+}) {
+  try {
+    return (
+      <MDXRemote
+        source={content}
+        components={components}
+        options={{
+          mdxOptions: {
+            development: false,
+            remarkPlugins: [remarkGfm],
+            // @ts-expect-error - rehype plugin types are incompatible
+            rehypePlugins,
+          },
+        }}
+      />
+    );
+  } catch (error) {
+    console.error('MDX 编译错误:', error);
+    return (
+      <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+        <h3 className="mb-2 text-lg font-semibold text-red-800 dark:text-red-400">
+          MDX 编译错误
+        </h3>
+        <p className="mb-2 text-sm text-red-700 dark:text-red-300">
+          文章内容包含无法编译的 MDX 语法。请检查文章内容，确保：
+        </p>
+        <ul className="mb-2 list-inside list-disc text-sm text-red-700 dark:text-red-300">
+          <li>JSX 属性名不能以数字开头</li>
+          <li>组件名不能以数字开头</li>
+          <li>确保所有 JSX 标签正确闭合</li>
+        </ul>
+        {process.env.NODE_ENV === 'development' && error instanceof Error && (
+          <details className="mt-2">
+            <summary className="cursor-pointer text-sm text-red-600 dark:text-red-400">
+              错误详情
+            </summary>
+            <pre className="mt-2 overflow-auto rounded bg-red-100 p-2 text-xs text-red-900 dark:bg-red-900/40 dark:text-red-200">
+              {error.message}
+            </pre>
+          </details>
+        )}
+      </div>
+    );
+  }
+}
+
 export default async function BlogPostPage({
   params,
 }: {
@@ -205,17 +279,9 @@ export default async function BlogPostPage({
 
           <div className="prose dark:prose-invert max-w-none">
             {post.content && post.content.trim() ? (
-              <MDXRemote
-                source={post.content}
+              <MdxContentWithErrorHandling
+                content={post.content}
                 components={mdxComponents}
-                options={{
-                  mdxOptions: {
-                    development: false,
-                    remarkPlugins: [remarkGfm],
-                    // @ts-expect-error - rehype plugin types are incompatible
-                    rehypePlugins,
-                  },
-                }}
               />
             ) : (
               <p className="text-gray-500 dark:text-gray-400">暂无内容</p>
