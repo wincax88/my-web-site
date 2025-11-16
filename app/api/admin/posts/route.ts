@@ -66,7 +66,7 @@ export async function GET(request: NextRequest) {
       errorMessage.includes('read-only') ||
       errorMessage.includes('file system') ||
       errorMessage.includes('P1001') ||
-      errorMessage.includes('Can\'t reach database server') ||
+      errorMessage.includes("Can't reach database server") ||
       errorMessage.includes('Connection') ||
       errorMessage.includes('timeout');
 

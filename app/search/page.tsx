@@ -42,10 +42,10 @@ export default function SearchPage() {
       try {
         // 使用动态导入，确保在客户端环境中加载
         const lunrModule = await import('lunr');
-        
+
         // lunr 2.x 使用 default 导出
         const lunrFn = lunrModule.default;
-        
+
         if (typeof lunrFn === 'function') {
           setLunr(() => lunrFn); // 使用函数形式设置，确保是函数引用
           setLunrReady(true);
@@ -61,7 +61,7 @@ export default function SearchPage() {
         setLoading(false);
       }
     };
-    
+
     loadLunr();
 
     // 加载搜索索引
@@ -91,18 +91,18 @@ export default function SearchPage() {
   // 高亮搜索关键词
   const highlightText = (text: string, query: string) => {
     if (!query.trim()) return text;
-    
+
     const keywords = query
       .trim()
       .split(/\s+/)
       .filter((k) => k.length > 0)
       .map((k) => k.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')); // 转义特殊字符
-    
+
     if (keywords.length === 0) return text;
-    
+
     const pattern = new RegExp(`(${keywords.join('|')})`, 'gi');
     const parts = text.split(pattern);
-    
+
     return parts.map((part, index) => {
       // 使用 pattern 的 lastIndex 重置，避免 test() 改变状态
       const testPattern = new RegExp(`(${keywords.join('|')})`, 'gi');
@@ -110,7 +110,7 @@ export default function SearchPage() {
         return (
           <mark
             key={index}
-            className="bg-yellow-200 dark:bg-yellow-900/50 rounded px-1"
+            className="rounded bg-yellow-200 px-1 dark:bg-yellow-900/50"
           >
             {part}
           </mark>
@@ -121,7 +121,13 @@ export default function SearchPage() {
   };
 
   const searchResults = useMemo(() => {
-    if (!query.trim() || !lunr || !lunrReady || typeof lunr !== 'function' || index.length === 0) {
+    if (
+      !query.trim() ||
+      !lunr ||
+      !lunrReady ||
+      typeof lunr !== 'function' ||
+      index.length === 0
+    ) {
       return [];
     }
 
