@@ -73,9 +73,7 @@ export function Mermaid({ chart, id }: MermaidProps) {
         <p className="text-sm font-semibold text-red-800 dark:text-red-400">
           Mermaid 图表渲染错误
         </p>
-        <p className="mt-1 text-xs text-red-700 dark:text-red-300">
-          {error}
-        </p>
+        <p className="mt-1 text-xs text-red-700 dark:text-red-300">{error}</p>
         <details className="mt-2">
           <summary className="cursor-pointer text-xs text-red-600 dark:text-red-400">
             查看原始代码
@@ -112,4 +110,3 @@ export function Mermaid({ chart, id }: MermaidProps) {
     </div>
   );
 }
-
