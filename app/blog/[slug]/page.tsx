@@ -8,9 +8,9 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import { TableOfContents } from '@/components/TableOfContents';
 import { ShareButtons } from '@/components/ShareButtons';
 import { CodeBlock } from '@/components/CodeBlock';
+import { Mermaid } from '@/components/Mermaid';
 import { Comments } from '@/components/Comments';
 import type { Metadata } from 'next';
-import type { PostType } from '@/types/post';
 
 // 准备 rehype 插件配置
 const rehypePlugins = [
@@ -154,6 +154,13 @@ const createMdxComponents = () => ({
     // 检查是否是代码块
     const codeElement = props.children?.props;
     if (codeElement?.className) {
+      const language = codeElement.className.replace('language-', '');
+      // 如果是 mermaid 代码块，使用 Mermaid 组件
+      if (language === 'mermaid') {
+        const chart = String(codeElement.children || '').trim();
+        return <Mermaid chart={chart} />;
+      }
+      // 其他代码块使用 CodeBlock
       return <CodeBlock {...codeElement} />;
     }
     return <pre {...props} />;
