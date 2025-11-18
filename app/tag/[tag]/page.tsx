@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { formatDate } from '@/lib/utils';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -17,9 +18,21 @@ export async function generateMetadata({
   params: { tag: string };
 }): Promise<Metadata> {
   const decodedTag = decodeURIComponent(params.tag);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
+  const tagUrl = `${siteUrl}/tag/${encodeURIComponent(decodedTag)}`;
+
   return {
     title: `标签: ${decodedTag}`,
-    description: `包含标签 "${decodedTag}" 的所有文章`,
+    description: `浏览包含标签 "${decodedTag}" 的所有技术博客文章`,
+    openGraph: {
+      title: `标签: ${decodedTag} - 函数志`,
+      description: `浏览包含标签 "${decodedTag}" 的所有技术博客文章`,
+      type: 'website',
+      url: tagUrl,
+    },
+    alternates: {
+      canonical: tagUrl,
+    },
   };
 }
 
@@ -49,7 +62,17 @@ export default async function TagPage({ params }: { params: { tag: string } }) {
             href={`/blog/${post.slug}`}
             className="group block rounded-lg border border-gray-200 p-6 transition-shadow hover:shadow-lg dark:border-gray-800"
           >
-            {post.coverImage && (
+            {post.coverImage ? (
+              <div className="relative mb-4 aspect-video overflow-hidden rounded bg-gray-200 dark:bg-gray-800">
+                <Image
+                  src={post.coverImage}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </div>
+            ) : (
               <div className="mb-4 aspect-video overflow-hidden rounded bg-gray-200 dark:bg-gray-800">
                 <div className="h-full w-full bg-gradient-to-br from-blue-400 to-purple-500" />
               </div>

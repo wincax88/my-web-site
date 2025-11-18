@@ -1,8 +1,21 @@
 import type { Metadata } from 'next';
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
+
 export const metadata: Metadata = {
   title: '关于',
-  description: '关于函数志',
+  description:
+    '了解函数志的创建者，技术栈和联系方式。我是一名热爱编程的开发者，专注于 Web 开发和现代前端技术。',
+  openGraph: {
+    title: '关于 - 函数志',
+    description:
+      '了解函数志的创建者，技术栈和联系方式。我是一名热爱编程的开发者，专注于 Web 开发和现代前端技术。',
+    type: 'profile',
+    url: `${siteUrl}/about`,
+  },
+  alternates: {
+    canonical: `${siteUrl}/about`,
+  },
 };
 
 export default function AboutPage() {

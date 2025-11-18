@@ -1,12 +1,34 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { getPaginatedPosts } from '@/lib/mdx';
 import { formatDate } from '@/lib/utils';
 import type { Metadata } from 'next';
 
-export const metadata: Metadata = {
-  title: '博客',
-  description: '技术博客文章列表',
-};
+export async function generateMetadata({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}): Promise<Metadata> {
+  const currentPage = parseInt(searchParams.page || '1', 10);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
+  const baseTitle = '博客';
+  const title =
+    currentPage > 1 ? `${baseTitle} - 第${currentPage}页` : baseTitle;
+
+  return {
+    title,
+    description: '浏览所有技术博客文章，了解最新的编程教程和开发经验',
+    openGraph: {
+      title,
+      description: '浏览所有技术博客文章，了解最新的编程教程和开发经验',
+      type: 'website',
+      url: `${siteUrl}/blog${currentPage > 1 ? `?page=${currentPage}` : ''}`,
+    },
+    alternates: {
+      canonical: `${siteUrl}/blog${currentPage > 1 ? `?page=${currentPage}` : ''}`,
+    },
+  };
+}
 
 export default async function BlogPage({
   searchParams,
@@ -27,9 +49,18 @@ export default async function BlogPage({
             href={`/blog/${post.slug}`}
             className="group block rounded-lg border border-gray-200 p-6 transition-shadow hover:shadow-lg dark:border-gray-800"
           >
-            {post.coverImage && (
+            {post.coverImage ? (
+              <div className="relative mb-4 aspect-video overflow-hidden rounded bg-gray-200 dark:bg-gray-800">
+                <Image
+                  src={post.coverImage}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                />
+              </div>
+            ) : (
               <div className="mb-4 aspect-video overflow-hidden rounded bg-gray-200 dark:bg-gray-800">
-                {/* 封面图占位，实际使用时用 next/image */}
                 <div className="h-full w-full bg-gradient-to-br from-blue-400 to-purple-500" />
               </div>
             )}

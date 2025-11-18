@@ -1,4 +1,5 @@
 import { notFound } from 'next/navigation';
+import Image from 'next/image';
 import { formatDate } from '@/lib/utils';
 import { extractHeadings } from '@/lib/toc';
 import { MDXRemote } from 'next-mdx-remote/rsc';
@@ -64,6 +65,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { getPostBySlug } = await import('@/lib/mdx');
   const post = await getPostBySlug(params.slug);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
 
   if (!post) {
     return {
@@ -71,22 +73,45 @@ export async function generateMetadata({
     };
   }
 
+  const postUrl = `${siteUrl}/blog/${post.slug}`;
+  const coverImage = post.coverImage
+    ? post.coverImage.startsWith('http')
+      ? post.coverImage
+      : `${siteUrl}${post.coverImage}`
+    : `${siteUrl}/og-image.png`;
+
   return {
     title: post.title,
     description: post.description,
+    keywords: post.tags,
+    authors: [{ name: 'Michael Wong' }],
     openGraph: {
       title: post.title,
       description: post.description,
       type: 'article',
+      url: postUrl,
       publishedTime: post.date,
       modifiedTime: post.updated,
-      images: post.coverImage ? [post.coverImage] : [],
+      authors: ['Michael Wong'],
+      tags: post.tags,
+      images: [
+        {
+          url: coverImage,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
     },
     twitter: {
       card: 'summary_large_image',
       title: post.title,
       description: post.description,
-      images: post.coverImage ? [post.coverImage] : [],
+      creator: '@Wincax1',
+      images: [coverImage],
+    },
+    alternates: {
+      canonical: postUrl,
     },
   };
 }
@@ -242,9 +267,79 @@ export default async function BlogPostPage({
   const mdxComponents = createMdxComponents();
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
   const postUrl = `${siteUrl}/blog/${post.slug}`;
+  const coverImage = post.coverImage
+    ? post.coverImage.startsWith('http')
+      ? post.coverImage
+      : `${siteUrl}${post.coverImage}`
+    : `${siteUrl}/og-image.png`;
+
+  // 文章结构化数据
+  const articleSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    image: coverImage,
+    datePublished: post.date,
+    dateModified: post.updated || post.date,
+    author: {
+      '@type': 'Person',
+      name: 'Michael Wong',
+      url: 'https://github.com/Michael8968',
+    },
+    publisher: {
+      '@type': 'Person',
+      name: 'Michael Wong',
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': postUrl,
+    },
+    keywords: post.tags?.join(', ') || '',
+    articleSection: post.tags?.[0] || '技术',
+    wordCount: post.content?.split(/\s+/).length || 0,
+  };
+
+  // 面包屑导航结构化数据
+  const breadcrumbSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: '首页',
+        item: siteUrl,
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: '博客',
+        item: `${siteUrl}/blog`,
+      },
+      {
+        '@type': 'ListItem',
+        position: 3,
+        name: post.title,
+        item: postUrl,
+      },
+    ],
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(articleSchema),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbSchema),
+        }}
+      />
       <div className="mx-auto flex max-w-7xl gap-8">
         <article className="max-w-4xl flex-1">
           <header className="mb-8">
@@ -277,12 +372,18 @@ export default async function BlogPostPage({
             )}
           </header>
 
-          {post.coverImage && (
-            <div className="mb-8 aspect-video overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
-              {/* 封面图占位，实际使用时用 next/image */}
-              <div className="h-full w-full bg-gradient-to-br from-blue-400 to-purple-500" />
+          {post.coverImage ? (
+            <div className="relative mb-8 aspect-video overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
+                className="object-cover"
+                priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+              />
             </div>
-          )}
+          ) : null}
 
           <div className="prose dark:prose-invert max-w-none">
             {post.content && post.content.trim() ? (

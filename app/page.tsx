@@ -2,15 +2,61 @@ import Link from 'next/link';
 import { getAllPosts, getAllTags } from '@/lib/mdx';
 import { Card } from '@/components/Card';
 import { ArrowRight, BookOpen, Code, Lightbulb } from 'lucide-react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '首页',
+  description:
+    '欢迎来到函数志，这里分享编程教程、技术博客和开发经验。探索最新的技术趋势，学习系统化的编程教程，了解开发中的最佳实践。',
+  openGraph: {
+    title: '函数志 - 编程教程与技术博客',
+    description: '欢迎来到函数志，这里分享编程教程、技术博客和开发经验。',
+    type: 'website',
+  },
+  alternates: {
+    canonical: process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev',
+  },
+};
 
 export default async function Home() {
   const allPosts = await getAllPosts();
   const featuredPosts = allPosts.slice(0, 3);
   const latestPosts = allPosts.slice(0, 6);
   const tags = (await getAllTags()).slice(0, 20);
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
+
+  // 首页结构化数据 - CollectionPage
+  const collectionPageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'CollectionPage',
+    name: '函数志',
+    url: siteUrl,
+    description: '编程教程与技术博客，分享最新的技术趋势和开发经验',
+    mainEntity: {
+      '@type': 'ItemList',
+      numberOfItems: allPosts.length,
+      itemListElement: featuredPosts.slice(0, 5).map((post, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'BlogPosting',
+          '@id': `${siteUrl}/blog/${post.slug}`,
+          name: post.title,
+          description: post.description,
+          url: `${siteUrl}/blog/${post.slug}`,
+        },
+      })),
+    },
+  };
 
   return (
     <main className="min-h-screen">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(collectionPageSchema),
+        }}
+      />
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-20">
         <div className="mx-auto max-w-3xl text-center">

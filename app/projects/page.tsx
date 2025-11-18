@@ -1,9 +1,22 @@
 import type { Metadata } from 'next';
 import { getProjects, type Project } from '@/lib/projects';
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
+
 export const metadata: Metadata = {
   title: '项目',
-  description: '我的项目作品集',
+  description:
+    '浏览我的项目作品集，包括使用 Next.js、React、TypeScript 等现代技术栈开发的项目。',
+  openGraph: {
+    title: '项目 - 函数志',
+    description:
+      '浏览我的项目作品集，包括使用 Next.js、React、TypeScript 等现代技术栈开发的项目。',
+    type: 'website',
+    url: `${siteUrl}/projects`,
+  },
+  alternates: {
+    canonical: `${siteUrl}/projects`,
+  },
 };
 
 export default async function ProjectsPage() {
