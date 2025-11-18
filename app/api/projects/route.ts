@@ -5,7 +5,11 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const projects = getProjects();
+    // 从查询参数中获取是否使用 GitHub API（默认为 true）
+    // 可以通过 ?useGitHub=false 来禁用 GitHub API
+    const useGitHub = process.env.USE_GITHUB_API !== 'false';
+
+    const projects = await getProjects(useGitHub);
     return NextResponse.json(projects, {
       headers: {
         'Content-Type': 'application/json',

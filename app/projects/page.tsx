@@ -23,12 +23,12 @@ export default async function ProjectsPage() {
       projects = await res.json();
     } else {
       // 如果 API 失败，使用共享数据源作为后备
-      projects = getProjects();
+      projects = await getProjects();
     }
   } catch (error) {
     console.error('Error fetching projects from API:', error);
     // 如果 API 失败，使用共享数据源作为后备
-    projects = getProjects();
+    projects = await getProjects();
   }
 
   return (
