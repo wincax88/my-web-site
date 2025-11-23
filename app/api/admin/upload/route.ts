@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { writeFile, mkdir } from 'fs/promises';
+import { put } from '@vercel/blob';
 import path from 'path';
-import { existsSync } from 'fs';
 import sharp from 'sharp';
 
 // 强制动态渲染
@@ -212,28 +211,44 @@ export async function POST(request: NextRequest) {
         : originalExtension;
     const fileName = `${timestamp}-${randomString}${finalExtension}`;
 
-    // 确保目录存在
-    const uploadDir = path.join(process.cwd(), 'public', 'assets', 'covers');
-    try {
-      if (!existsSync(uploadDir)) {
-        await mkdir(uploadDir, { recursive: true });
-      }
-    } catch (error) {
-      console.error('Error creating upload directory:', error);
-      return NextResponse.json({ error: '创建上传目录失败' }, { status: 500 });
+    // 确定 MIME 类型
+    let contentType: string;
+    if (finalExtension === '.webp') {
+      contentType = 'image/webp';
+    } else if (finalExtension === '.jpg' || finalExtension === '.jpeg') {
+      contentType = 'image/jpeg';
+    } else if (finalExtension === '.png') {
+      contentType = 'image/png';
+    } else if (finalExtension === '.gif') {
+      contentType = 'image/gif';
+    } else {
+      contentType = file.type || 'image/jpeg';
     }
 
-    // 保存文件
-    const filePath = path.join(uploadDir, fileName);
+    // 使用 Vercel Blob Storage 保存文件
+    let blobUrl: string;
     try {
-      await writeFile(filePath, buffer);
+      const blob = await put(`covers/${fileName}`, buffer, {
+        contentType,
+        access: 'public',
+      });
+      blobUrl = blob.url;
+      console.log('[Upload API] 文件已上传到 Blob Storage:', blobUrl);
     } catch (error) {
-      console.error('Error saving file:', error);
-      return NextResponse.json({ error: '保存文件失败' }, { status: 500 });
+      console.error('Error uploading to Blob Storage:', error);
+      const errorMessage = error instanceof Error ? error.message : '未知错误';
+      return NextResponse.json(
+        {
+          error: '保存文件失败',
+          details:
+            process.env.NODE_ENV === 'development' ? errorMessage : undefined,
+        },
+        { status: 500 }
+      );
     }
 
     // 返回文件 URL
-    const fileUrl = `/assets/covers/${fileName}`;
+    const fileUrl = blobUrl;
 
     const finalSize = buffer.length;
     const originalSize = file.size;
