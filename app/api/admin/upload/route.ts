@@ -27,8 +27,8 @@ export async function POST(request: NextRequest) {
   console.log('[Upload API] 收到上传请求');
 
   try {
-    // 检查登录状态
-    const authHeader = request.headers.get('authorization');
+    // TODO: 添加认证检查
+    // const authHeader = request.headers.get('authorization');
     // 这里可以添加更严格的认证检查
     // 目前简化处理，实际应该验证 session 或 token
 
