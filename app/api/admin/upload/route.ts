@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: '读取文件失败' }, { status: 400 });
     }
 
-    let buffer = Buffer.from(bytes);
+    let buffer: Buffer = Buffer.from(bytes);
     const needsCompression = file.size > MAX_FILE_SIZE;
 
     // 生成唯一文件名
