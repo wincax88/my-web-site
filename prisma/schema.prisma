@@ -101,3 +101,32 @@ model LessonProgress {
   @@index([visitorId])
 }
 
+// Newsletter 订阅者
+model Subscriber {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  confirmed     Boolean   @default(false)  // 是否已确认订阅
+  confirmToken  String?   @unique          // 确认 token
+  unsubscribeToken String @unique @default(cuid()) // 退订 token
+  createdAt     DateTime  @default(now())
+  confirmedAt   DateTime?
+  unsubscribedAt DateTime?
+
+  @@index([email])
+  @@index([confirmToken])
+}
+
+// 社交分享统计
+model ShareStats {
+  id        String   @id @default(cuid())
+  postSlug  String
+  platform  String   // twitter, facebook, linkedin, weibo, copy
+  count     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([postSlug, platform])
+  @@index([postSlug])
+}
+

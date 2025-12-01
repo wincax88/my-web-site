@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { Github, Twitter, Mail } from 'lucide-react';
+import { NewsletterForm } from './NewsletterForm';
 
 export function Footer() {
   const currentYear = new Date().getFullYear();
@@ -7,7 +8,7 @@ export function Footer() {
   return (
     <footer className="border-t border-gray-200 bg-gray-50 dark:border-gray-800 dark:bg-gray-900">
       <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* About */}
           <div>
             <h3 className="mb-4 text-lg font-semibold">关于</h3>
@@ -85,6 +86,15 @@ export function Footer() {
                 <Mail className="h-5 w-5" />
               </a>
             </div>
+          </div>
+
+          {/* Newsletter */}
+          <div>
+            <h3 className="mb-4 text-lg font-semibold">订阅更新</h3>
+            <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
+              获取最新文章和教程通知
+            </p>
+            <NewsletterForm compact />
           </div>
         </div>
 

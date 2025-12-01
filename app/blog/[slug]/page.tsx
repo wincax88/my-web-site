@@ -419,6 +419,7 @@ export default async function BlogPostPage({
               title={post.title}
               url={postUrl}
               description={post.description}
+              slug={post.slug}
             />
           </div>
 
