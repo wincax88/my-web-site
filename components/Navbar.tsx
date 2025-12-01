@@ -17,6 +17,8 @@ const navLinks: NavLink[] = [
   { label: '首页', href: '/' },
   { label: '博客', href: '/blog' },
   { label: '教程', href: '/courses' },
+  { label: '归档', href: '/archive' },
+  { label: '收藏', href: '/bookmarks' },
   { label: '项目', href: '/projects' },
   { label: '关于', href: '/about' },
   { label: '管理', href: '/admin/posts' },

@@ -14,6 +14,9 @@ import { Comments } from '@/components/Comments';
 import { ViewCounter } from '@/components/ViewCounter';
 import { RelatedPosts } from '@/components/RelatedPosts';
 import { LikeButton } from '@/components/LikeButton';
+import { ReadingProgress } from '@/components/ReadingProgress';
+import { BackToTop } from '@/components/BackToTop';
+import { BookmarkButton } from '@/components/BookmarkButton';
 import type { Metadata } from 'next';
 
 // 准备 rehype 插件配置
@@ -333,8 +336,10 @@ export default async function BlogPostPage({
   };
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <script
+    <>
+      <ReadingProgress />
+      <div className="container mx-auto px-4 py-8">
+        <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
           __html: JSON.stringify(articleSchema),
@@ -406,6 +411,7 @@ export default async function BlogPostPage({
 
           <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-gray-200 pt-6 dark:border-gray-800">
             <LikeButton slug={post.slug} />
+            <BookmarkButton slug={post.slug} title={post.title} />
             <ShareButtons
               title={post.title}
               url={postUrl}
@@ -423,7 +429,9 @@ export default async function BlogPostPage({
             <TableOfContents headings={headings} />
           </aside>
         )}
+        </div>
       </div>
-    </div>
+      <BackToTop />
+    </>
   );
 }
