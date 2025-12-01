@@ -30,7 +30,7 @@
 ### 安装依赖
 
 ```bash
-npm install
+yarn install
 ```
 
 ### 配置环境变量
@@ -59,19 +59,19 @@ OPENAI_API_KEY="your-openai-api-key"
 
 ```bash
 # 生成 Prisma Client
-npm run db:generate
+yarn db:generate
 
 # 创建数据库表（开发环境）
-npm run db:push
+yarn db:push
 
 # 或使用迁移（推荐）
-npm run db:migrate
+yarn db:migrate
 ```
 
 ### 开发模式
 
 ```bash
-npm run dev
+yarn dev
 ```
 
 访问 [http://localhost:3000](http://localhost:3000)
@@ -79,8 +79,8 @@ npm run dev
 ### 构建生产版本
 
 ```bash
-npm run build
-npm start
+yarn build
+yarn start
 ```
 
 ## 项目结构
@@ -118,20 +118,20 @@ draft: false
 
 ## 开发命令
 
-- `npm run dev` - 启动开发服务器
-- `npm run build` - 构建生产版本
-- `npm run start` - 启动生产服务器
-- `npm run lint` - 运行 ESLint
-- `npm run typecheck` - TypeScript 类型检查
-- `npm run format` - 格式化代码
+- `yarn dev` - 启动开发服务器
+- `yarn build` - 构建生产版本
+- `yarn start` - 启动生产服务器
+- `yarn lint` - 运行 ESLint
+- `yarn typecheck` - TypeScript 类型检查
+- `yarn format` - 格式化代码
 
 ### 数据库命令
 
-- `npm run db:generate` - 生成 Prisma Client
-- `npm run db:push` - 推送 schema 到数据库（开发环境）
-- `npm run db:migrate` - 创建并应用迁移（开发环境）
-- `npm run db:migrate:deploy` - 应用迁移（生产环境）
-- `npm run db:studio` - 打开 Prisma Studio（数据库管理界面）
+- `yarn db:generate` - 生成 Prisma Client
+- `yarn db:push` - 推送 schema 到数据库（开发环境）
+- `yarn db:migrate` - 创建并应用迁移（开发环境）
+- `yarn db:migrate:deploy` - 应用迁移（生产环境）
+- `yarn db:studio` - 打开 Prisma Studio（数据库管理界面）
 
 ## 部署
 
