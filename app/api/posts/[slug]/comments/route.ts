@@ -1,29 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { validateAndSanitizeComment } from '@/lib/sanitize';
+import { verifyRecaptchaToken, isRecaptchaConfigured } from '@/lib/recaptcha';
+import { checkCommentRateLimit, getRateLimitHeaders } from '@/lib/rate-limit';
 
 // 强制动态渲染，避免构建时静态分析
 export const dynamic = 'force-dynamic';
-
-// 简单的内存限流（生产环境应使用 Redis 等）
-const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
-
-function checkRateLimit(ip: string): boolean {
-  const now = Date.now();
-  const limit = rateLimitMap.get(ip);
-
-  if (!limit || now > limit.resetTime) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + 60000 }); // 1分钟
-    return true;
-  }
-
-  if (limit.count >= 5) {
-    // 每分钟最多5条评论
-    return false;
-  }
-
-  limit.count++;
-  return true;
-}
 
 export async function POST(
   request: NextRequest,
@@ -32,38 +14,64 @@ export async function POST(
   try {
     const slug = params.slug;
     const ip =
-      request.headers.get('x-forwarded-for') ||
+      request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
       request.headers.get('x-real-ip') ||
       'unknown';
 
-    // 限流检查
-    if (!checkRateLimit(ip)) {
+    // 1. 频率限制检查
+    const rateLimitResult = checkCommentRateLimit(ip);
+    const rateLimitHeaders = getRateLimitHeaders(rateLimitResult);
+
+    if (!rateLimitResult.allowed) {
+      const errorMessage = rateLimitResult.blocked
+        ? `请求过于频繁，请在 ${Math.ceil((rateLimitResult.blockExpiresIn || 0) / 1000)} 秒后重试`
+        : '请求过于频繁，请稍后再试';
+
       return NextResponse.json(
-        { error: '请求过于频繁，请稍后再试' },
-        { status: 429 }
+        { error: errorMessage },
+        { status: 429, headers: rateLimitHeaders }
       );
     }
 
     const body = await request.json();
-    const { author, content } = body;
+    const { author, content, recaptchaToken } = body;
 
-    // 验证输入
-    if (!author || !content) {
-      return NextResponse.json(
-        { error: '作者和内容不能为空' },
-        { status: 400 }
+    // 2. reCAPTCHA 验证（如果已配置）
+    if (isRecaptchaConfigured()) {
+      const recaptchaResult = await verifyRecaptchaToken(
+        recaptchaToken,
+        'submit_comment'
       );
+
+      if (!recaptchaResult.success) {
+        return NextResponse.json(
+          { error: recaptchaResult.error || '验证码验证失败' },
+          { status: 403 }
+        );
+      }
+
+      // 根据分数决定是否自动批准评论
+      // 高分（>= 0.7）的评论更可能是真人
+      console.log(`[Comment] reCAPTCHA score: ${recaptchaResult.score}`);
     }
 
-    if (author.length > 100) {
-      return NextResponse.json({ error: '作者名称过长' }, { status: 400 });
+    // 3. XSS 防护和输入验证
+    let sanitizedAuthor: string;
+    let sanitizedContent: string;
+
+    try {
+      const sanitized = validateAndSanitizeComment(author, content);
+      sanitizedAuthor = sanitized.author;
+      sanitizedContent = sanitized.content;
+    } catch (validationError) {
+      const errorMessage =
+        validationError instanceof Error
+          ? validationError.message
+          : '输入验证失败';
+      return NextResponse.json({ error: errorMessage }, { status: 400 });
     }
 
-    if (content.length > 5000) {
-      return NextResponse.json({ error: '评论内容过长' }, { status: 400 });
-    }
-
-    // 查找或创建文章（基于 slug）
+    // 4. 查找或创建文章（基于 slug）
     let post = await prisma.post.findUnique({
       where: { slug },
     });
@@ -80,15 +88,19 @@ export async function POST(
       });
     }
 
-    // 创建评论
+    // 5. 创建评论
     const comment = await prisma.comment.create({
       data: {
         postId: post.id,
-        author: author.trim(),
-        content: content.trim(),
+        author: sanitizedAuthor,
+        content: sanitizedContent,
         approved: false, // 默认需要审核
       },
     });
+
+    console.log(
+      `[Comment] New comment created: ${comment.id} for post ${slug}`
+    );
 
     return NextResponse.json(
       {
@@ -98,7 +110,7 @@ export async function POST(
         createdAt: comment.createdAt,
         message: '评论已提交，等待审核',
       },
-      { status: 201 }
+      { status: 201, headers: rateLimitHeaders }
     );
   } catch (error) {
     console.error('Error creating comment:', error);

@@ -4,10 +4,11 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useSession, signOut } from 'next-auth/react';
 import { formatDate } from '@/lib/utils';
 import { PostForm } from '@/components/PostForm';
 import { LoginModal } from '@/components/LoginModal';
-import { Loader2, Plus, Edit, Trash2, Eye } from 'lucide-react';
+import { Loader2, Plus, Edit, Trash2, Eye, LogOut } from 'lucide-react';
 
 interface Post {
   id: string;
@@ -26,6 +27,7 @@ interface Post {
 }
 
 export default function AdminPostsPage() {
+  const { data: session, status } = useSession();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -34,36 +36,39 @@ export default function AdminPostsPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [includeDrafts, setIncludeDrafts] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const router = useRouter();
 
   // 检查登录状态
   useEffect(() => {
-    const checkLogin = () => {
-      const loggedIn = sessionStorage.getItem('adminLoggedIn') === 'true';
-      setIsLoggedIn(loggedIn);
-      if (!loggedIn) {
-        setShowLoginModal(true);
-      }
-    };
-
-    checkLogin();
-  }, []);
+    if (status === 'unauthenticated') {
+      setShowLoginModal(true);
+    } else if (status === 'authenticated') {
+      setShowLoginModal(false);
+    }
+  }, [status]);
 
   const handleLoginSuccess = () => {
-    setIsLoggedIn(true);
     setShowLoginModal(false);
+    // 刷新页面以更新 session
+    router.refresh();
   };
 
   const handleLoginClose = () => {
     // 如果关闭登录窗口且未登录，返回首页
-    if (!isLoggedIn) {
+    if (status !== 'authenticated') {
       router.push('/');
     }
   };
 
+  const handleLogout = async () => {
+    await signOut({ redirect: false });
+    router.push('/');
+  };
+
   const fetchPosts = useCallback(async () => {
+    if (status !== 'authenticated') return;
+
     setLoading(true);
     try {
       const response = await fetch(
@@ -73,6 +78,8 @@ export default function AdminPostsPage() {
         const data = await response.json();
         setPosts(data.posts);
         setTotalPages(data.totalPages);
+      } else if (response.status === 401) {
+        setShowLoginModal(true);
       } else {
         console.error('获取文章列表失败');
       }
@@ -81,11 +88,13 @@ export default function AdminPostsPage() {
     } finally {
       setLoading(false);
     }
-  }, [page, includeDrafts]);
+  }, [page, includeDrafts, status]);
 
   useEffect(() => {
-    fetchPosts();
-  }, [fetchPosts]);
+    if (status === 'authenticated') {
+      fetchPosts();
+    }
+  }, [fetchPosts, status]);
 
   const handleDelete = async (id: string) => {
     if (!confirm('确定要删除这篇文章吗？此操作不可撤销。')) {
@@ -100,6 +109,8 @@ export default function AdminPostsPage() {
 
       if (response.ok) {
         await fetchPosts();
+      } else if (response.status === 401) {
+        setShowLoginModal(true);
       } else {
         const data = await response.json();
         alert(data.error || '删除失败');
@@ -120,6 +131,8 @@ export default function AdminPostsPage() {
         const fullPost = await response.json();
         setEditingPost(fullPost);
         setShowForm(true);
+      } else if (response.status === 401) {
+        setShowLoginModal(true);
       } else {
         const data = await response.json();
         alert(data.error || '获取文章详情失败');
@@ -141,8 +154,17 @@ export default function AdminPostsPage() {
     fetchPosts();
   };
 
+  // 加载中状态
+  if (status === 'loading') {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+      </div>
+    );
+  }
+
   // 如果未登录，显示登录窗口
-  if (!isLoggedIn) {
+  if (status !== 'authenticated') {
     return (
       <LoginModal
         isOpen={showLoginModal}
@@ -168,13 +190,25 @@ export default function AdminPostsPage() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-4xl font-bold">文章管理</h1>
-        <button
-          onClick={handleNew}
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
-        >
-          <Plus className="h-5 w-5" />
-          新建文章
-        </button>
+        <div className="flex items-center gap-4">
+          <span className="text-sm text-gray-600 dark:text-gray-400">
+            {session?.user?.email}
+          </span>
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+          >
+            <LogOut className="h-4 w-4" />
+            退出登录
+          </button>
+          <button
+            onClick={handleNew}
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
+          >
+            <Plus className="h-5 w-5" />
+            新建文章
+          </button>
+        </div>
       </div>
 
       <div className="mb-4 flex items-center gap-4">

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
 import path from 'path';
 import sharp from 'sharp';
+import { requireAdminAuth } from '@/lib/auth-utils';
 
 // 强制动态渲染
 export const dynamic = 'force-dynamic';
@@ -26,12 +27,13 @@ export const runtime = 'nodejs'; // 确保使用 Node.js runtime
 export async function POST(request: NextRequest) {
   console.log('[Upload API] 收到上传请求');
 
-  try {
-    // TODO: 添加认证检查
-    // const authHeader = request.headers.get('authorization');
-    // 这里可以添加更严格的认证检查
-    // 目前简化处理，实际应该验证 session 或 token
+  // 验证管理员权限
+  const auth = await requireAdminAuth();
+  if (!auth.authenticated) {
+    return auth.error;
+  }
 
+  try {
     console.log('[Upload API] 开始解析 FormData');
     let formData: FormData;
     try {

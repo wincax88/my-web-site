@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { signIn } from 'next-auth/react';
 import { X } from 'lucide-react';
 
 interface LoginModalProps {
@@ -8,9 +9,6 @@ interface LoginModalProps {
   onClose: () => void;
   onSuccess: () => void;
 }
-
-const VALID_EMAIL = 'wincax@hotmail.com';
-const VALID_PASSWORD = 'Huang@021130';
 
 export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
   const [email, setEmail] = useState('');
@@ -25,21 +23,26 @@ export function LoginModal({ isOpen, onClose, onSuccess }: LoginModalProps) {
     setError('');
     setLoading(true);
 
-    // 模拟验证延迟
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    try {
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      });
 
-    if (email === VALID_EMAIL && password === VALID_PASSWORD) {
-      // 保存登录状态到 sessionStorage
-      sessionStorage.setItem('adminLoggedIn', 'true');
-      setEmail('');
-      setPassword('');
-      onSuccess();
-      onClose();
-    } else {
-      setError('邮箱或密码错误');
+      if (result?.error) {
+        setError(result.error);
+      } else if (result?.ok) {
+        setEmail('');
+        setPassword('');
+        onSuccess();
+        onClose();
+      }
+    } catch (err) {
+      setError('登录失败，请稍后再试');
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   const handleClose = () => {

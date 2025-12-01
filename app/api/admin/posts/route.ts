@@ -1,11 +1,18 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { requireAdminAuth } from '@/lib/auth-utils';
 
 // 强制动态渲染，避免构建时静态分析
 export const dynamic = 'force-dynamic';
 
 // 获取所有文章
 export async function GET(request: NextRequest) {
+  // 验证管理员权限
+  const auth = await requireAdminAuth();
+  if (!auth.authenticated) {
+    return auth.error;
+  }
+
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1', 10);
@@ -99,6 +106,12 @@ export async function GET(request: NextRequest) {
 
 // 创建新文章
 export async function POST(request: NextRequest) {
+  // 验证管理员权限
+  const auth = await requireAdminAuth();
+  if (!auth.authenticated) {
+    return auth.error;
+  }
+
   try {
     const body = await request.json();
     const { title, slug, description, content, tags, published, coverImage } =

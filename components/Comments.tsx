@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useGoogleReCaptcha } from 'react-google-recaptcha-v3';
 import { formatDate } from '@/lib/utils';
-import { Send, Loader2 } from 'lucide-react';
+import { Send, Loader2, Shield } from 'lucide-react';
 
 interface Comment {
   id: string;
@@ -24,11 +25,10 @@ export function Comments({ slug }: CommentsProps) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  useEffect(() => {
-    fetchComments();
-  }, [slug]);
+  // reCAPTCHA hook - may be undefined if not configured
+  const { executeRecaptcha } = useGoogleReCaptcha();
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
     try {
       const res = await fetch(`/api/posts/${slug}/comments`);
       const data = await res.json();
@@ -40,7 +40,11 @@ export function Comments({ slug }: CommentsProps) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [slug]);
+
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -55,12 +59,23 @@ export function Comments({ slug }: CommentsProps) {
     setSubmitting(true);
 
     try {
+      // Get reCAPTCHA token if available
+      let recaptchaToken: string | undefined;
+      if (executeRecaptcha) {
+        try {
+          recaptchaToken = await executeRecaptcha('submit_comment');
+        } catch (recaptchaError) {
+          console.error('reCAPTCHA error:', recaptchaError);
+          // Continue without token if reCAPTCHA fails
+        }
+      }
+
       const res = await fetch(`/api/posts/${slug}/comments`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ author, content }),
+        body: JSON.stringify({ author, content, recaptchaToken }),
       });
 
       const data = await res.json();
@@ -104,6 +119,7 @@ export function Comments({ slug }: CommentsProps) {
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
             placeholder="您的姓名"
+            maxLength={100}
             className="w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900"
             disabled={submitting}
           />
@@ -114,9 +130,13 @@ export function Comments({ slug }: CommentsProps) {
             onChange={(e) => setContent(e.target.value)}
             placeholder="写下您的评论..."
             rows={4}
+            maxLength={5000}
             className="w-full resize-none rounded-lg border border-gray-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900"
             disabled={submitting}
           />
+          <div className="mt-1 text-right text-xs text-gray-400">
+            {content.length}/5000
+          </div>
         </div>
         {error && (
           <div className="text-sm text-red-600 dark:text-red-400">{error}</div>
@@ -126,23 +146,31 @@ export function Comments({ slug }: CommentsProps) {
             {success}
           </div>
         )}
-        <button
-          type="submit"
-          disabled={submitting}
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-        >
-          {submitting ? (
-            <>
-              <Loader2 className="h-4 w-4 animate-spin" />
-              提交中...
-            </>
-          ) : (
-            <>
-              <Send className="h-4 w-4" />
-              提交评论
-            </>
+        <div className="flex items-center justify-between">
+          <button
+            type="submit"
+            disabled={submitting}
+            className="flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-2 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            {submitting ? (
+              <>
+                <Loader2 className="h-4 w-4 animate-spin" />
+                提交中...
+              </>
+            ) : (
+              <>
+                <Send className="h-4 w-4" />
+                提交评论
+              </>
+            )}
+          </button>
+          {executeRecaptcha && (
+            <div className="flex items-center gap-1 text-xs text-gray-400">
+              <Shield className="h-3 w-3" />
+              <span>reCAPTCHA 保护</span>
+            </div>
           )}
-        </button>
+        </div>
       </form>
 
       {/* 评论列表 */}

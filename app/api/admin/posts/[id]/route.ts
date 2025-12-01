@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { requireAdminAuth } from '@/lib/auth-utils';
 
 // 强制动态渲染，避免构建时静态分析
 export const dynamic = 'force-dynamic';
@@ -11,6 +12,12 @@ export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
+  // 验证管理员权限
+  const auth = await requireAdminAuth();
+  if (!auth.authenticated) {
+    return auth.error;
+  }
+
   try {
     // 处理 Next.js 14/15 中 params 可能是 Promise 的情况
     const resolvedParams = await Promise.resolve(params);
@@ -74,6 +81,12 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
+  // 验证管理员权限
+  const auth = await requireAdminAuth();
+  if (!auth.authenticated) {
+    return auth.error;
+  }
+
   try {
     // 处理 Next.js 14/15 中 params 可能是 Promise 的情况
     const resolvedParams = await Promise.resolve(params);
@@ -185,6 +198,12 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> | { id: string } }
 ) {
+  // 验证管理员权限
+  const auth = await requireAdminAuth();
+  if (!auth.authenticated) {
+    return auth.error;
+  }
+
   try {
     // 处理 Next.js 14/15 中 params 可能是 Promise 的情况
     const resolvedParams = await Promise.resolve(params);
