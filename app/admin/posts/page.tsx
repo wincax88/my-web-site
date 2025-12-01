@@ -191,6 +191,18 @@ export default function AdminPostsPage() {
       <div className="mb-8 flex items-center justify-between">
         <h1 className="text-4xl font-bold">文章管理</h1>
         <div className="flex items-center gap-4">
+          <Link
+            href="/admin/comments"
+            className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400"
+          >
+            评论管理
+          </Link>
+          <Link
+            href="/admin/courses"
+            className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400"
+          >
+            课程管理
+          </Link>
           <span className="text-sm text-gray-600 dark:text-gray-400">
             {session?.user?.email}
           </span>

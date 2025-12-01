@@ -32,15 +32,21 @@ model Tag {
 }
 
 model Comment {
-  id        String   @id @default(cuid())
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  id        String    @id @default(cuid())
+  post      Post      @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    String
   author    String
-  content   String   @db.Text
-  createdAt DateTime @default(now())
-  approved  Boolean  @default(false)
+  content   String    @db.Text
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  approved  Boolean   @default(false)
+  // 嵌套评论支持
+  parent    Comment?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  parentId  String?
+  replies   Comment[] @relation("CommentReplies")
 
   @@index([postId])
+  @@index([parentId])
 }
 
 // 教程/课程模型

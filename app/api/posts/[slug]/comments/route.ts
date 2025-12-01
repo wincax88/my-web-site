@@ -7,12 +7,13 @@ import { checkCommentRateLimit, getRateLimitHeaders } from '@/lib/rate-limit';
 // 强制动态渲染，避免构建时静态分析
 export const dynamic = 'force-dynamic';
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: { slug: string } }
-) {
+type Props = {
+  params: Promise<{ slug: string }>;
+};
+
+export async function POST(request: NextRequest, { params }: Props) {
   try {
-    const slug = params.slug;
+    const { slug } = await params;
     const ip =
       request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ||
       request.headers.get('x-real-ip') ||
@@ -34,7 +35,7 @@ export async function POST(
     }
 
     const body = await request.json();
-    const { author, content, recaptchaToken } = body;
+    const { author, content, recaptchaToken, parentId } = body;
 
     // 2. reCAPTCHA 验证（如果已配置）
     if (isRecaptchaConfigured()) {
@@ -88,18 +89,41 @@ export async function POST(
       });
     }
 
-    // 5. 创建评论
+    // 5. 验证父评论（如果是回复）
+    if (parentId) {
+      const parentComment = await prisma.comment.findUnique({
+        where: { id: parentId },
+      });
+
+      if (!parentComment) {
+        return NextResponse.json(
+          { error: '回复的评论不存在' },
+          { status: 404, headers: rateLimitHeaders }
+        );
+      }
+
+      // 确保父评论属于同一篇文章
+      if (parentComment.postId !== post.id) {
+        return NextResponse.json(
+          { error: '评论不属于该文章' },
+          { status: 400, headers: rateLimitHeaders }
+        );
+      }
+    }
+
+    // 6. 创建评论
     const comment = await prisma.comment.create({
       data: {
         postId: post.id,
         author: sanitizedAuthor,
         content: sanitizedContent,
         approved: false, // 默认需要审核
+        parentId: parentId || null,
       },
     });
 
     console.log(
-      `[Comment] New comment created: ${comment.id} for post ${slug}`
+      `[Comment] New ${parentId ? 'reply' : 'comment'} created: ${comment.id} for post ${slug}`
     );
 
     return NextResponse.json(
@@ -108,6 +132,7 @@ export async function POST(
         author: comment.author,
         content: comment.content,
         createdAt: comment.createdAt,
+        parentId: comment.parentId,
         message: '评论已提交，等待审核',
       },
       { status: 201, headers: rateLimitHeaders }
@@ -121,19 +146,66 @@ export async function POST(
   }
 }
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { slug: string } }
-) {
+// 递归构建嵌套评论结构
+interface CommentWithReplies {
+  id: string;
+  author: string;
+  content: string;
+  createdAt: Date;
+  parentId: string | null;
+  replies: CommentWithReplies[];
+}
+
+function buildNestedComments(
+  comments: Array<{
+    id: string;
+    author: string;
+    content: string;
+    createdAt: Date;
+    parentId: string | null;
+  }>
+): CommentWithReplies[] {
+  const commentMap = new Map<string, CommentWithReplies>();
+  const roots: CommentWithReplies[] = [];
+
+  // 首先创建所有评论的映射
+  comments.forEach((comment) => {
+    commentMap.set(comment.id, {
+      ...comment,
+      replies: [],
+    });
+  });
+
+  // 然后构建树结构
+  comments.forEach((comment) => {
+    const node = commentMap.get(comment.id)!;
+    if (comment.parentId && commentMap.has(comment.parentId)) {
+      commentMap.get(comment.parentId)!.replies.push(node);
+    } else {
+      roots.push(node);
+    }
+  });
+
+  return roots;
+}
+
+export async function GET(request: NextRequest, { params }: Props) {
   try {
-    const slug = params.slug;
+    const { slug } = await params;
 
     const post = await prisma.post.findUnique({
       where: { slug },
       include: {
         comments: {
           where: { approved: true },
-          orderBy: { createdAt: 'desc' },
+          orderBy: { createdAt: 'asc' },
+          select: {
+            id: true,
+            author: true,
+            content: true,
+            createdAt: true,
+            parentId: true,
+          },
         },
       },
     });
@@ -142,13 +214,20 @@ export async function GET(
       return NextResponse.json({ comments: [] });
     }
 
+    // 构建嵌套结构
+    const nestedComments = buildNestedComments(post.comments);
+
+    // 转换为 JSON 友好格式
+    const formatComment = (comment: CommentWithReplies): object => ({
+      id: comment.id,
+      author: comment.author,
+      content: comment.content,
+      createdAt: comment.createdAt.toISOString(),
+      replies: comment.replies.map(formatComment),
+    });
+
     return NextResponse.json({
-      comments: post.comments.map((comment) => ({
-        id: comment.id,
-        author: comment.author,
-        content: comment.content,
-        createdAt: comment.createdAt,
-      })),
+      comments: nestedComments.map(formatComment),
     });
   } catch (error) {
     console.error('Error fetching comments:', error);

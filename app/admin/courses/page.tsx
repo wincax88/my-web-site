@@ -212,6 +212,12 @@ export default function AdminCoursesPage() {
           >
             文章管理
           </Link>
+          <Link
+            href="/admin/comments"
+            className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400"
+          >
+            评论管理
+          </Link>
           <span className="text-sm text-gray-600 dark:text-gray-400">
             {session?.user?.email}
           </span>
