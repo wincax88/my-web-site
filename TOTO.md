@@ -160,11 +160,24 @@
 >   - `components/ServiceWorkerRegistration.tsx` - SW 注册组件
 >   - 各页面添加 `export const revalidate = 60`
 
-### 9. 社交功能
+### 9. 社交功能 ✅ 已完成
 
-- [ ] 实现 Newsletter 订阅功能
+- [x] 实现 Newsletter 订阅功能
 - [x] ~~添加文章阅读量显示~~ (已在管理后台增强中完成)
-- [ ] 集成社交媒体分享统计
+- [x] 集成社交媒体分享统计
+
+> **实现说明**:
+> - Newsletter 订阅：支持邮箱订阅、确认邮件、退订功能
+> - 社交分享统计：追踪各平台分享次数并显示统计
+> - Prisma 模型：Subscriber（订阅者）、ShareStats（分享统计）
+> - 相关文件：
+>   - `prisma/schema.prisma` - 添加 Subscriber 和 ShareStats 模型
+>   - `app/api/newsletter/*` - Newsletter API（订阅/确认/退订）
+>   - `app/api/posts/[slug]/share/route.ts` - 分享统计 API
+>   - `app/newsletter/*` - Newsletter 状态页面
+>   - `components/NewsletterForm.tsx` - 订阅表单组件
+>   - `components/ShareButtons.tsx` - 更新为支持分享统计
+>   - `components/Footer.tsx` - 添加 Newsletter 订阅入口
 
 ### 10. 国际化
 
