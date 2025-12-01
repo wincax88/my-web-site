@@ -481,6 +481,12 @@ export default function AdminCommentsPage() {
         </div>
         <div className="flex items-center gap-4">
           <Link
+            href="/admin/dashboard"
+            className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400"
+          >
+            数据统计
+          </Link>
+          <Link
             href="/admin/posts"
             className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400"
           >
@@ -491,6 +497,12 @@ export default function AdminCommentsPage() {
             className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400"
           >
             课程管理
+          </Link>
+          <Link
+            href="/admin/tags"
+            className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400"
+          >
+            标签管理
           </Link>
           <span className="text-sm text-gray-600 dark:text-gray-400">
             {session?.user?.email}

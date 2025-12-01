@@ -207,6 +207,12 @@ export default function AdminCoursesPage() {
         <h1 className="text-4xl font-bold">课程管理</h1>
         <div className="flex items-center gap-4">
           <Link
+            href="/admin/dashboard"
+            className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400"
+          >
+            数据统计
+          </Link>
+          <Link
             href="/admin/posts"
             className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400"
           >
@@ -217,6 +223,12 @@ export default function AdminCoursesPage() {
             className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400"
           >
             评论管理
+          </Link>
+          <Link
+            href="/admin/tags"
+            className="text-sm text-gray-600 hover:text-blue-600 dark:text-gray-400"
+          >
+            标签管理
           </Link>
           <span className="text-sm text-gray-600 dark:text-gray-400">
             {session?.user?.email}
