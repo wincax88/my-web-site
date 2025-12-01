@@ -23,10 +23,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (!['approve', 'reject', 'delete'].includes(action)) {
-      return NextResponse.json(
-        { error: '无效的操作类型' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '无效的操作类型' }, { status: 400 });
     }
 
     let result;
@@ -62,16 +59,10 @@ export async function POST(request: NextRequest) {
         });
 
       default:
-        return NextResponse.json(
-          { error: '无效的操作类型' },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: '无效的操作类型' }, { status: 400 });
     }
   } catch (error) {
     console.error('Error batch operation:', error);
-    return NextResponse.json(
-      { error: '批量操作失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '批量操作失败' }, { status: 500 });
   }
 }

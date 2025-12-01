@@ -72,7 +72,9 @@ function StatCard({
           <p className="text-sm text-gray-500 dark:text-gray-400">{title}</p>
           <p className="mt-1 text-3xl font-bold">{value}</p>
           {subValue && (
-            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">{subValue}</p>
+            <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+              {subValue}
+            </p>
           )}
         </div>
         <div className={`rounded-lg p-3 ${color}`}>
@@ -235,7 +237,9 @@ export default function AdminDashboardPage() {
               </div>
               <div className="space-y-3">
                 {analytics.topPosts.length === 0 ? (
-                  <p className="text-center text-gray-500 dark:text-gray-400">暂无数据</p>
+                  <p className="text-center text-gray-500 dark:text-gray-400">
+                    暂无数据
+                  </p>
                 ) : (
                   analytics.topPosts.map((post, index) => (
                     <div
@@ -294,7 +298,9 @@ export default function AdminDashboardPage() {
               </div>
               <div className="space-y-3">
                 {analytics.recentComments.length === 0 ? (
-                  <p className="text-center text-gray-500 dark:text-gray-400">暂无评论</p>
+                  <p className="text-center text-gray-500 dark:text-gray-400">
+                    暂无评论
+                  </p>
                 ) : (
                   analytics.recentComments.map((comment) => (
                     <div

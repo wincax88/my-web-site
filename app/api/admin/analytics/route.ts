@@ -169,7 +169,9 @@ export async function GET() {
       recentComments: recentComments.map((comment) => ({
         id: comment.id,
         author: comment.author,
-        content: comment.content.substring(0, 100) + (comment.content.length > 100 ? '...' : ''),
+        content:
+          comment.content.substring(0, 100) +
+          (comment.content.length > 100 ? '...' : ''),
         approved: comment.approved,
         createdAt: comment.createdAt.toISOString(),
         post: comment.post,

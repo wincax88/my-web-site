@@ -21,7 +21,8 @@ export default async function ArchivePage() {
 
   // 计算总文章数
   const totalPosts = archive.reduce(
-    (sum, year) => sum + year.months.reduce((mSum, month) => mSum + month.posts.length, 0),
+    (sum, year) =>
+      sum + year.months.reduce((mSum, month) => mSum + month.posts.length, 0),
     0
   );
 
@@ -107,7 +108,11 @@ export default async function ArchivePage() {
                               dateTime={post.date}
                               className="flex-shrink-0 text-sm text-gray-400"
                             >
-                              {new Date(post.date).getDate().toString().padStart(2, '0')}日
+                              {new Date(post.date)
+                                .getDate()
+                                .toString()
+                                .padStart(2, '0')}
+                              日
                             </time>
                             <Link
                               href={`/blog/${post.slug}`}

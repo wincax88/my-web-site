@@ -10,14 +10,23 @@ interface ShareButtonsProps {
   slug?: string;
 }
 
-export function ShareButtons({ title, url, description, slug }: ShareButtonsProps) {
+export function ShareButtons({
+  title,
+  url,
+  description,
+  slug,
+}: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
   const [shareStats, setShareStats] = useState<Record<string, number>>({});
   const [totalShares, setTotalShares] = useState(0);
   const fullUrl = typeof window !== 'undefined' ? window.location.href : url;
 
   // 从 URL 中提取 slug（如果没有直接传入）
-  const postSlug = slug || (typeof window !== 'undefined' ? window.location.pathname.split('/').pop() : '');
+  const postSlug =
+    slug ||
+    (typeof window !== 'undefined'
+      ? window.location.pathname.split('/').pop()
+      : '');
 
   useEffect(() => {
     if (postSlug) {

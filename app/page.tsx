@@ -165,7 +165,9 @@ export default async function Home() {
       {/* Tags Cloud */}
       {tags.length > 0 && (
         <section className="container mx-auto px-4 py-16">
-          <h2 className="mb-8 text-center text-3xl font-bold">{t('tagCloud')}</h2>
+          <h2 className="mb-8 text-center text-3xl font-bold">
+            {t('tagCloud')}
+          </h2>
           <div className="flex flex-wrap justify-center gap-3">
             {tags.map((tag) => (
               <Link

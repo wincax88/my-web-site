@@ -21,7 +21,7 @@ if (!password) {
   console.log('使用方法: npx ts-node scripts/hash-password.ts "your-password"');
   console.log('\n或者在 Node.js 中运行:');
   console.log(
-    'node -e "const bcrypt = require(\'bcryptjs\'); bcrypt.hash(\'your-password\', 12).then(console.log)"'
+    "node -e \"const bcrypt = require('bcryptjs'); bcrypt.hash('your-password', 12).then(console.log)\""
   );
   process.exit(1);
 }

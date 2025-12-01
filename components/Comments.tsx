@@ -40,7 +40,13 @@ function CommentItem({
   const isReplying = replyingTo === comment.id;
 
   return (
-    <div className={depth > 0 ? 'ml-6 border-l-2 border-gray-200 pl-4 dark:border-gray-700' : ''}>
+    <div
+      className={
+        depth > 0
+          ? 'ml-6 border-l-2 border-gray-200 pl-4 dark:border-gray-700'
+          : ''
+      }
+    >
       <div
         className={`rounded-lg p-4 ${
           isReplying
@@ -97,7 +103,10 @@ export function Comments({ slug }: CommentsProps) {
   const [content, setContent] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [replyingTo, setReplyingTo] = useState<{ id: string; author: string } | null>(null);
+  const [replyingTo, setReplyingTo] = useState<{
+    id: string;
+    author: string;
+  } | null>(null);
 
   // reCAPTCHA hook - may be undefined if not configured
   const { executeRecaptcha } = useGoogleReCaptcha();
@@ -123,7 +132,9 @@ export function Comments({ slug }: CommentsProps) {
   const handleReply = (commentId: string, authorName: string) => {
     setReplyingTo({ id: commentId, author: authorName });
     // 滚动到表单
-    document.getElementById('comment-form')?.scrollIntoView({ behavior: 'smooth' });
+    document
+      .getElementById('comment-form')
+      ?.scrollIntoView({ behavior: 'smooth' });
   };
 
   const cancelReply = () => {
@@ -204,7 +215,11 @@ export function Comments({ slug }: CommentsProps) {
       <h2 className="mb-6 text-2xl font-bold">评论 ({totalCount})</h2>
 
       {/* 评论表单 */}
-      <form id="comment-form" onSubmit={handleSubmit} className="mb-8 space-y-4">
+      <form
+        id="comment-form"
+        onSubmit={handleSubmit}
+        className="mb-8 space-y-4"
+      >
         {replyingTo && (
           <div className="flex items-center justify-between rounded-lg bg-blue-50 px-4 py-2 dark:bg-blue-900/20">
             <span className="text-sm text-blue-700 dark:text-blue-300">
@@ -234,7 +249,9 @@ export function Comments({ slug }: CommentsProps) {
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            placeholder={replyingTo ? `回复 ${replyingTo.author}...` : '写下您的评论...'}
+            placeholder={
+              replyingTo ? `回复 ${replyingTo.author}...` : '写下您的评论...'
+            }
             rows={4}
             maxLength={5000}
             className="w-full resize-none rounded-lg border border-gray-300 bg-white px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:bg-gray-900"

@@ -17,7 +17,10 @@ export async function generateMetadata({
   const currentPage = parseInt(searchParams.page || '1', 10);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
   const baseTitle = t('title');
-  const title = currentPage > 1 ? `${baseTitle} - ${t('page', { page: currentPage })}` : baseTitle;
+  const title =
+    currentPage > 1
+      ? `${baseTitle} - ${t('page', { page: currentPage })}`
+      : baseTitle;
 
   return {
     title,

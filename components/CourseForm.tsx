@@ -158,7 +158,9 @@ export function CourseForm({ course, onClose, onSave }: CourseFormProps) {
 
   const updateLesson = (index: number, updates: Partial<Lesson>) => {
     setLessons((prev) =>
-      prev.map((lesson, i) => (i === index ? { ...lesson, ...updates } : lesson))
+      prev.map((lesson, i) =>
+        i === index ? { ...lesson, ...updates } : lesson
+      )
     );
   };
 
@@ -261,10 +263,9 @@ export function CourseForm({ course, onClose, onSave }: CourseFormProps) {
       for (const lesson of lessons) {
         if (lesson.isDeleted && lesson.id) {
           // 删除课时
-          await fetch(
-            `/api/admin/courses/${courseId}/lessons/${lesson.id}`,
-            { method: 'DELETE' }
-          );
+          await fetch(`/api/admin/courses/${courseId}/lessons/${lesson.id}`, {
+            method: 'DELETE',
+          });
         } else if (lesson.isNew && !lesson.isDeleted) {
           // 创建新课时
           if (lesson.title && lesson.slug && lesson.content) {
@@ -284,22 +285,19 @@ export function CourseForm({ course, onClose, onSave }: CourseFormProps) {
           }
         } else if (lesson.id && !lesson.isDeleted) {
           // 更新已有课时
-          await fetch(
-            `/api/admin/courses/${courseId}/lessons/${lesson.id}`,
-            {
-              method: 'PUT',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                title: lesson.title,
-                slug: lesson.slug,
-                description: lesson.description,
-                content: lesson.content,
-                order: lesson.order,
-                duration: lesson.duration,
-                published: lesson.published,
-              }),
-            }
-          );
+          await fetch(`/api/admin/courses/${courseId}/lessons/${lesson.id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              title: lesson.title,
+              slug: lesson.slug,
+              description: lesson.description,
+              content: lesson.content,
+              order: lesson.order,
+              duration: lesson.duration,
+              published: lesson.published,
+            }),
+          });
         }
       }
 
@@ -509,9 +507,7 @@ export function CourseForm({ course, onClose, onSave }: CourseFormProps) {
                   {/* 课时标题栏 */}
                   <div
                     className="flex cursor-pointer items-center gap-2 p-3"
-                    onClick={() =>
-                      setExpandedLesson(isExpanded ? null : index)
-                    }
+                    onClick={() => setExpandedLesson(isExpanded ? null : index)}
                   >
                     <GripVertical className="h-4 w-4 text-gray-400" />
                     <span className="flex h-6 w-6 items-center justify-center rounded-full bg-blue-100 text-xs font-medium text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
@@ -544,7 +540,8 @@ export function CourseForm({ course, onClose, onSave }: CourseFormProps) {
                           moveLessonDown(index);
                         }}
                         disabled={
-                          index === lessons.filter((l) => !l.isDeleted).length - 1
+                          index ===
+                          lessons.filter((l) => !l.isDeleted).length - 1
                         }
                         className="rounded p-1 hover:bg-gray-100 disabled:opacity-30 dark:hover:bg-gray-800"
                       >

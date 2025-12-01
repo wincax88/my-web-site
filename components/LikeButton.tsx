@@ -91,7 +91,7 @@ export function LikeButton({ slug, initialLikes = 0 }: LikeButtonProps) {
       title={hasLiked ? '取消点赞' : '点赞'}
     >
       <Heart
-        className={`h-4 w-4 transition-transform ${hasLiked ? 'fill-current scale-110' : ''}`}
+        className={`h-4 w-4 transition-transform ${hasLiked ? 'scale-110 fill-current' : ''}`}
       />
       <span>{likes.toLocaleString()}</span>
     </button>

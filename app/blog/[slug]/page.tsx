@@ -343,96 +343,96 @@ export default async function BlogPostPage({
       <ReadingProgress />
       <div className="container mx-auto px-4 py-8">
         <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(articleSchema),
-        }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify(breadcrumbSchema),
-        }}
-      />
-      <div className="mx-auto flex max-w-7xl gap-8">
-        <article className="max-w-4xl flex-1">
-          <header className="mb-8">
-            <h1 className="mb-4 text-3xl font-bold">{post.title}</h1>
-            <div className="mb-4 flex items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
-              <time dateTime={post.date}>{formatDate(post.date)}</time>
-              {post.updated && (
-                <>
-                  <span>•</span>
-                  <time dateTime={post.updated}>
-                    更新于 {formatDate(post.updated)}
-                  </time>
-                </>
-              )}
-              <span>•</span>
-              <span>{post.readingTime}</span>
-              <span>•</span>
-              <ViewCounter slug={post.slug} />
-            </div>
-            {post.tags && post.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {post.tags.map((tag) => (
-                  <a
-                    key={tag}
-                    href={`/tag/${tag}`}
-                    className="rounded-full bg-gray-100 px-3 py-1 text-xs transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
-                  >
-                    {tag}
-                  </a>
-                ))}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(articleSchema),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(breadcrumbSchema),
+          }}
+        />
+        <div className="mx-auto flex max-w-7xl gap-8">
+          <article className="max-w-4xl flex-1">
+            <header className="mb-8">
+              <h1 className="mb-4 text-3xl font-bold">{post.title}</h1>
+              <div className="mb-4 flex items-center gap-4 text-xs text-gray-600 dark:text-gray-400">
+                <time dateTime={post.date}>{formatDate(post.date)}</time>
+                {post.updated && (
+                  <>
+                    <span>•</span>
+                    <time dateTime={post.updated}>
+                      更新于 {formatDate(post.updated)}
+                    </time>
+                  </>
+                )}
+                <span>•</span>
+                <span>{post.readingTime}</span>
+                <span>•</span>
+                <ViewCounter slug={post.slug} />
               </div>
-            )}
-          </header>
+              {post.tags && post.tags.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {post.tags.map((tag) => (
+                    <a
+                      key={tag}
+                      href={`/tag/${tag}`}
+                      className="rounded-full bg-gray-100 px-3 py-1 text-xs transition-colors hover:bg-gray-200 dark:bg-gray-800 dark:hover:bg-gray-700"
+                    >
+                      {tag}
+                    </a>
+                  ))}
+                </div>
+              )}
+            </header>
 
-          {post.coverImage ? (
-            <div className="relative mb-8 aspect-video overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
-              <Image
-                src={post.coverImage}
-                alt={post.title}
-                fill
-                className="object-cover"
-                priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+            {post.coverImage ? (
+              <div className="relative mb-8 aspect-video overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-800">
+                <Image
+                  src={post.coverImage}
+                  alt={post.title}
+                  fill
+                  className="object-cover"
+                  priority
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
+                />
+              </div>
+            ) : null}
+
+            <div className="prose dark:prose-invert max-w-none">
+              {post.content && post.content.trim() ? (
+                <MdxContentWithErrorHandling
+                  content={post.content}
+                  components={mdxComponents}
+                />
+              ) : (
+                <p className="text-gray-500 dark:text-gray-400">暂无内容</p>
+              )}
+            </div>
+
+            <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-gray-200 pt-6 dark:border-gray-800">
+              <LikeButton slug={post.slug} />
+              <BookmarkButton slug={post.slug} title={post.title} />
+              <ShareButtons
+                title={post.title}
+                url={postUrl}
+                description={post.description}
+                slug={post.slug}
               />
             </div>
-          ) : null}
 
-          <div className="prose dark:prose-invert max-w-none">
-            {post.content && post.content.trim() ? (
-              <MdxContentWithErrorHandling
-                content={post.content}
-                components={mdxComponents}
-              />
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400">暂无内容</p>
-            )}
-          </div>
+            <RelatedPosts posts={relatedPosts} />
 
-          <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-gray-200 pt-6 dark:border-gray-800">
-            <LikeButton slug={post.slug} />
-            <BookmarkButton slug={post.slug} title={post.title} />
-            <ShareButtons
-              title={post.title}
-              url={postUrl}
-              description={post.description}
-              slug={post.slug}
-            />
-          </div>
+            <Comments slug={post.slug} />
+          </article>
 
-          <RelatedPosts posts={relatedPosts} />
-
-          <Comments slug={post.slug} />
-        </article>
-
-        {headings.length > 0 && (
-          <aside className="hidden w-64 flex-shrink-0 lg:block">
-            <TableOfContents headings={headings} />
-          </aside>
-        )}
+          {headings.length > 0 && (
+            <aside className="hidden w-64 flex-shrink-0 lg:block">
+              <TableOfContents headings={headings} />
+            </aside>
+          )}
         </div>
       </div>
       <BackToTop />

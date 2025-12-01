@@ -15,7 +15,8 @@ export default function NewsletterConfirmedPage() {
           订阅成功！
         </h1>
         <p className="mb-8 text-gray-600 dark:text-gray-400">
-          感谢您订阅函数志 Newsletter！您将会收到最新的技术文章、教程更新和精选内容。
+          感谢您订阅函数志
+          Newsletter！您将会收到最新的技术文章、教程更新和精选内容。
         </p>
         <div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
           <Link

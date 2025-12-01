@@ -34,7 +34,10 @@ export default function AdminTagsPage() {
   const [search, setSearch] = useState('');
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [processingId, setProcessingId] = useState<string | null>(null);
-  const [editingTag, setEditingTag] = useState<{ id: string; name: string } | null>(null);
+  const [editingTag, setEditingTag] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
   const [newTagName, setNewTagName] = useState('');
   const [showNewForm, setShowNewForm] = useState(false);
   const [error, setError] = useState('');
@@ -257,7 +260,7 @@ export default function AdminTagsPage() {
 
       {/* 搜索栏 */}
       <div className="mb-6 flex items-center gap-4">
-        <div className="relative flex-1 max-w-md">
+        <div className="relative max-w-md flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
           <input
             type="text"
@@ -384,7 +387,9 @@ export default function AdminTagsPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => setEditingTag({ id: tag.id, name: tag.name })}
+                        onClick={() =>
+                          setEditingTag({ id: tag.id, name: tag.name })
+                        }
                         className="flex items-center gap-1 rounded border border-gray-300 px-2 py-1 text-sm hover:bg-gray-100 dark:border-gray-600 dark:hover:bg-gray-700"
                       >
                         <Edit className="h-3 w-3" />

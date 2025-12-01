@@ -8,7 +8,14 @@ type Props = {
 };
 
 // 有效的分享平台
-const VALID_PLATFORMS = ['twitter', 'facebook', 'linkedin', 'weibo', 'copy', 'email'];
+const VALID_PLATFORMS = [
+  'twitter',
+  'facebook',
+  'linkedin',
+  'weibo',
+  'copy',
+  'email',
+];
 
 // 获取文章分享统计
 export async function GET(request: NextRequest, { params }: Props) {
@@ -51,10 +58,7 @@ export async function POST(request: NextRequest, { params }: Props) {
     const { platform } = body;
 
     if (!platform || !VALID_PLATFORMS.includes(platform)) {
-      return NextResponse.json(
-        { error: '无效的分享平台' },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: '无效的分享平台' }, { status: 400 });
     }
 
     // 更新或创建分享统计
@@ -82,9 +86,6 @@ export async function POST(request: NextRequest, { params }: Props) {
     });
   } catch (error) {
     console.error('Error recording share:', error);
-    return NextResponse.json(
-      { error: '记录分享失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '记录分享失败' }, { status: 500 });
   }
 }

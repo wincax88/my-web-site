@@ -51,12 +51,19 @@ export default function AdminCommentsPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [pendingCount, setPendingCount] = useState(0);
-  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'approved'>('all');
+  const [statusFilter, setStatusFilter] = useState<
+    'all' | 'pending' | 'approved'
+  >('all');
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [processingIds, setProcessingIds] = useState<Set<string>>(new Set());
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
-  const [editingComment, setEditingComment] = useState<{ id: string; content: string } | null>(null);
-  const [expandedComments, setExpandedComments] = useState<Set<string>>(new Set());
+  const [editingComment, setEditingComment] = useState<{
+    id: string;
+    content: string;
+  } | null>(null);
+  const [expandedComments, setExpandedComments] = useState<Set<string>>(
+    new Set()
+  );
   const router = useRouter();
 
   useEffect(() => {
@@ -144,7 +151,9 @@ export default function AdminCommentsPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm('确定要删除这条评论吗？此操作将同时删除所有回复，且不可撤销。')) {
+    if (
+      !confirm('确定要删除这条评论吗？此操作将同时删除所有回复，且不可撤销。')
+    ) {
       return;
     }
 
@@ -180,7 +189,8 @@ export default function AdminCommentsPage() {
       return;
     }
 
-    const actionLabel = action === 'approve' ? '批准' : action === 'reject' ? '拒绝' : '删除';
+    const actionLabel =
+      action === 'approve' ? '批准' : action === 'reject' ? '拒绝' : '删除';
     if (!confirm(`确定要${actionLabel}选中的 ${selectedIds.size} 条评论吗？`)) {
       return;
     }
@@ -274,9 +284,14 @@ export default function AdminCommentsPage() {
     }
   };
 
-  const renderComment = (comment: Comment | Reply, isReply = false, depth = 0) => {
+  const renderComment = (
+    comment: Comment | Reply,
+    isReply = false,
+    depth = 0
+  ) => {
     const isExpanded = expandedComments.has(comment.id);
-    const hasReplies = 'replies' in comment && comment.replies && comment.replies.length > 0;
+    const hasReplies =
+      'replies' in comment && comment.replies && comment.replies.length > 0;
     const isProcessing = processingIds.has(comment.id);
     const isEditing = editingComment?.id === comment.id;
 
@@ -353,7 +368,10 @@ export default function AdminCommentsPage() {
                   <textarea
                     value={editingComment.content}
                     onChange={(e) =>
-                      setEditingComment({ ...editingComment, content: e.target.value })
+                      setEditingComment({
+                        ...editingComment,
+                        content: e.target.value,
+                      })
                     }
                     className="w-full rounded border border-gray-300 p-2 text-sm dark:border-gray-600 dark:bg-gray-800"
                     rows={3}
@@ -412,7 +430,12 @@ export default function AdminCommentsPage() {
                   </button>
                 )}
                 <button
-                  onClick={() => setEditingComment({ id: comment.id, content: comment.content })}
+                  onClick={() =>
+                    setEditingComment({
+                      id: comment.id,
+                      content: comment.content,
+                    })
+                  }
                   disabled={isProcessing}
                   className="flex items-center gap-1 rounded border border-gray-300 px-2 py-1 text-xs hover:bg-gray-100 disabled:opacity-50 dark:border-gray-600 dark:hover:bg-gray-700"
                   title="编辑"
@@ -520,7 +543,9 @@ export default function AdminCommentsPage() {
       {/* 筛选和批量操作 */}
       <div className="mb-6 flex flex-wrap items-center gap-4">
         <div className="flex items-center gap-2">
-          <label className="text-sm text-gray-600 dark:text-gray-400">筛选：</label>
+          <label className="text-sm text-gray-600 dark:text-gray-400">
+            筛选：
+          </label>
           <select
             value={statusFilter}
             onChange={(e) => {
@@ -577,11 +602,15 @@ export default function AdminCommentsPage() {
           <div className="mb-4 flex items-center gap-2">
             <input
               type="checkbox"
-              checked={selectedIds.size === comments.length && comments.length > 0}
+              checked={
+                selectedIds.size === comments.length && comments.length > 0
+              }
               onChange={selectAll}
               className="h-4 w-4"
             />
-            <span className="text-sm text-gray-600 dark:text-gray-400">全选</span>
+            <span className="text-sm text-gray-600 dark:text-gray-400">
+              全选
+            </span>
           </div>
 
           {/* 评论列表 */}

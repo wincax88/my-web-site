@@ -8,10 +8,15 @@ interface NewsletterFormProps {
   compact?: boolean;
 }
 
-export function NewsletterForm({ className = '', compact = false }: NewsletterFormProps) {
+export function NewsletterForm({
+  className = '',
+  compact = false,
+}: NewsletterFormProps) {
   const [email, setEmail] = useState('');
   const [name, setName] = useState('');
-  const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [status, setStatus] = useState<
+    'idle' | 'loading' | 'success' | 'error'
+  >('idle');
   const [message, setMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -51,7 +56,9 @@ export function NewsletterForm({ className = '', compact = false }: NewsletterFo
 
   if (status === 'success') {
     return (
-      <div className={`rounded-lg border border-green-200 bg-green-50 p-6 text-center dark:border-green-800 dark:bg-green-900/20 ${className}`}>
+      <div
+        className={`rounded-lg border border-green-200 bg-green-50 p-6 text-center dark:border-green-800 dark:bg-green-900/20 ${className}`}
+      >
         <CheckCircle className="mx-auto mb-3 h-10 w-10 text-green-500" />
         <p className="text-green-700 dark:text-green-300">{message}</p>
       </div>

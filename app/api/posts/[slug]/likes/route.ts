@@ -47,9 +47,10 @@ export async function POST(request: NextRequest, { params }: Props) {
     const updatedPost = await prisma.post.update({
       where: { slug },
       data: {
-        likes: action === 'unlike'
-          ? { decrement: post.likes > 0 ? 1 : 0 }
-          : { increment: 1 },
+        likes:
+          action === 'unlike'
+            ? { decrement: post.likes > 0 ? 1 : 0 }
+            : { increment: 1 },
       },
       select: { likes: true },
     });

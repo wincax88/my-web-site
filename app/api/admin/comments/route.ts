@@ -106,9 +106,6 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Error fetching comments:', error);
-    return NextResponse.json(
-      { error: '获取评论列表失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '获取评论列表失败' }, { status: 500 });
   }
 }

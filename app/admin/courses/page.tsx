@@ -115,7 +115,9 @@ export default function AdminCoursesPage() {
   }, [fetchCourses, status]);
 
   const handleDelete = async (id: string) => {
-    if (!confirm('确定要删除这个课程吗？此操作将同时删除所有课时，且不可撤销。')) {
+    if (
+      !confirm('确定要删除这个课程吗？此操作将同时删除所有课时，且不可撤销。')
+    ) {
       return;
     }
 

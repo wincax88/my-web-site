@@ -18,7 +18,11 @@ export function BookmarkButton({ slug, title }: BookmarkButtonProps) {
     setIsBookmarked(bookmarks.some((b) => b.slug === slug));
   }, [slug]);
 
-  const getBookmarks = (): Array<{ slug: string; title: string; addedAt: string }> => {
+  const getBookmarks = (): Array<{
+    slug: string;
+    title: string;
+    addedAt: string;
+  }> => {
     try {
       const stored = localStorage.getItem('bookmarked_posts');
       return stored ? JSON.parse(stored) : [];
@@ -27,7 +31,9 @@ export function BookmarkButton({ slug, title }: BookmarkButtonProps) {
     }
   };
 
-  const saveBookmarks = (bookmarks: Array<{ slug: string; title: string; addedAt: string }>) => {
+  const saveBookmarks = (
+    bookmarks: Array<{ slug: string; title: string; addedAt: string }>
+  ) => {
     localStorage.setItem('bookmarked_posts', JSON.stringify(bookmarks));
   };
 
@@ -72,7 +78,7 @@ export function BookmarkButton({ slug, title }: BookmarkButtonProps) {
       title={isBookmarked ? '取消收藏' : '收藏文章'}
     >
       <Bookmark
-        className={`h-4 w-4 transition-transform ${isBookmarked ? 'fill-current scale-110' : ''}`}
+        className={`h-4 w-4 transition-transform ${isBookmarked ? 'scale-110 fill-current' : ''}`}
       />
       <span>{isBookmarked ? '已收藏' : '收藏'}</span>
     </button>

@@ -47,7 +47,10 @@ self.addEventListener('fetch', (event) => {
 
   // 跳过 API 请求和 Chrome 扩展请求
   const url = new URL(event.request.url);
-  if (url.pathname.startsWith('/api/') || url.protocol === 'chrome-extension:') {
+  if (
+    url.pathname.startsWith('/api/') ||
+    url.protocol === 'chrome-extension:'
+  ) {
     return;
   }
 
@@ -75,7 +78,11 @@ self.addEventListener('fetch', (event) => {
       return fetch(event.request)
         .then((response) => {
           // 检查是否是有效的响应
-          if (!response || response.status !== 200 || response.type !== 'basic') {
+          if (
+            !response ||
+            response.status !== 200 ||
+            response.type !== 'basic'
+          ) {
             return response;
           }
 

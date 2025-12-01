@@ -96,7 +96,9 @@ export function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold">{t('subscribeUpdates')}</h3>
+            <h3 className="mb-4 text-lg font-semibold">
+              {t('subscribeUpdates')}
+            </h3>
             <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
               {t('getLatestNews')}
             </p>

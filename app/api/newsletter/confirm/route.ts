@@ -9,7 +9,9 @@ export async function GET(request: NextRequest) {
     const token = searchParams.get('token');
 
     if (!token) {
-      return NextResponse.redirect(new URL('/newsletter/error?reason=missing_token', request.url));
+      return NextResponse.redirect(
+        new URL('/newsletter/error?reason=missing_token', request.url)
+      );
     }
 
     const subscriber = await prisma.subscriber.findUnique({
@@ -17,11 +19,15 @@ export async function GET(request: NextRequest) {
     });
 
     if (!subscriber) {
-      return NextResponse.redirect(new URL('/newsletter/error?reason=invalid_token', request.url));
+      return NextResponse.redirect(
+        new URL('/newsletter/error?reason=invalid_token', request.url)
+      );
     }
 
     if (subscriber.confirmed) {
-      return NextResponse.redirect(new URL('/newsletter/already-confirmed', request.url));
+      return NextResponse.redirect(
+        new URL('/newsletter/already-confirmed', request.url)
+      );
     }
 
     // 确认订阅
@@ -37,6 +43,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL('/newsletter/confirmed', request.url));
   } catch (error) {
     console.error('Newsletter confirm error:', error);
-    return NextResponse.redirect(new URL('/newsletter/error?reason=server_error', request.url));
+    return NextResponse.redirect(
+      new URL('/newsletter/error?reason=server_error', request.url)
+    );
   }
 }

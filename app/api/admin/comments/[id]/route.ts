@@ -42,10 +42,7 @@ export async function GET(request: NextRequest, { params }: Props) {
     });
 
     if (!comment) {
-      return NextResponse.json(
-        { error: '评论不存在' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '评论不存在' }, { status: 404 });
     }
 
     return NextResponse.json({
@@ -68,10 +65,7 @@ export async function GET(request: NextRequest, { params }: Props) {
     });
   } catch (error) {
     console.error('Error fetching comment:', error);
-    return NextResponse.json(
-      { error: '获取评论失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '获取评论失败' }, { status: 500 });
   }
 }
 
@@ -93,10 +87,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
     });
 
     if (!existingComment) {
-      return NextResponse.json(
-        { error: '评论不存在' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '评论不存在' }, { status: 404 });
     }
 
     // 构建更新数据
@@ -135,10 +126,7 @@ export async function PUT(request: NextRequest, { params }: Props) {
     });
   } catch (error) {
     console.error('Error updating comment:', error);
-    return NextResponse.json(
-      { error: '更新评论失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '更新评论失败' }, { status: 500 });
   }
 }
 
@@ -163,10 +151,7 @@ export async function DELETE(request: NextRequest, { params }: Props) {
     });
 
     if (!existingComment) {
-      return NextResponse.json(
-        { error: '评论不存在' },
-        { status: 404 }
-      );
+      return NextResponse.json({ error: '评论不存在' }, { status: 404 });
     }
 
     // 删除评论（级联删除会自动删除所有回复）
@@ -180,9 +165,6 @@ export async function DELETE(request: NextRequest, { params }: Props) {
     });
   } catch (error) {
     console.error('Error deleting comment:', error);
-    return NextResponse.json(
-      { error: '删除评论失败' },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: '删除评论失败' }, { status: 500 });
   }
 }

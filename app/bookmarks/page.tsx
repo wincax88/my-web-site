@@ -27,9 +27,12 @@ export default function BookmarksPage() {
     try {
       const stored = localStorage.getItem('bookmarked_posts');
       const data = stored ? JSON.parse(stored) : [];
-      setBookmarks(data.sort((a: BookmarkedPost, b: BookmarkedPost) =>
-        new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime()
-      ));
+      setBookmarks(
+        data.sort(
+          (a: BookmarkedPost, b: BookmarkedPost) =>
+            new Date(b.addedAt).getTime() - new Date(a.addedAt).getTime()
+        )
+      );
     } catch {
       setBookmarks([]);
     }
@@ -42,18 +45,27 @@ export default function BookmarksPage() {
   };
 
   const clearAll = () => {
-    if (confirm(locale === 'zh' ? '确定要清空所有收藏吗？' : 'Are you sure you want to clear all bookmarks?')) {
+    if (
+      confirm(
+        locale === 'zh'
+          ? '确定要清空所有收藏吗？'
+          : 'Are you sure you want to clear all bookmarks?'
+      )
+    ) {
       localStorage.removeItem('bookmarked_posts');
       setBookmarks([]);
     }
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
+    return new Date(dateString).toLocaleDateString(
+      locale === 'zh' ? 'zh-CN' : 'en-US',
+      {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      }
+    );
   };
 
   if (!hasMounted) {
@@ -62,7 +74,10 @@ export default function BookmarksPage() {
         <h1 className="mb-8 text-3xl font-bold">{t('title')}</h1>
         <div className="animate-pulse space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-20 rounded-lg bg-gray-200 dark:bg-gray-800" />
+            <div
+              key={i}
+              className="h-20 rounded-lg bg-gray-200 dark:bg-gray-800"
+            />
           ))}
         </div>
       </div>
@@ -107,7 +122,9 @@ export default function BookmarksPage() {
       ) : (
         <div className="space-y-4">
           <p className="mb-6 text-sm text-gray-500 dark:text-gray-400">
-            {locale === 'zh' ? `共收藏 ${bookmarks.length} 篇文章` : `${bookmarks.length} bookmarked articles`}
+            {locale === 'zh'
+              ? `共收藏 ${bookmarks.length} 篇文章`
+              : `${bookmarks.length} bookmarked articles`}
           </p>
           {bookmarks.map((bookmark) => (
             <div
@@ -122,7 +139,9 @@ export default function BookmarksPage() {
                   {bookmark.title}
                 </Link>
                 <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                  {locale === 'zh' ? `收藏于 ${formatDate(bookmark.addedAt)}` : `Bookmarked on ${formatDate(bookmark.addedAt)}`}
+                  {locale === 'zh'
+                    ? `收藏于 ${formatDate(bookmark.addedAt)}`
+                    : `Bookmarked on ${formatDate(bookmark.addedAt)}`}
                 </p>
               </div>
               <div className="flex items-center gap-2">

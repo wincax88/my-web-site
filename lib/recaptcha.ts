@@ -68,7 +68,10 @@ export async function verifyRecaptchaToken(
     });
 
     if (!response.ok) {
-      console.error('[reCAPTCHA] Verification request failed:', response.status);
+      console.error(
+        '[reCAPTCHA] Verification request failed:',
+        response.status
+      );
       return { success: false, error: '验证服务不可用' };
     }
 

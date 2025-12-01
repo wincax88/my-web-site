@@ -29,10 +29,7 @@ export async function POST(request: NextRequest) {
 
     if (existing) {
       if (existing.confirmed && !existing.unsubscribedAt) {
-        return NextResponse.json(
-          { error: '该邮箱已订阅' },
-          { status: 400 }
-        );
+        return NextResponse.json({ error: '该邮箱已订阅' }, { status: 400 });
       }
 
       // 如果之前退订了，重新激活

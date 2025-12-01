@@ -17,7 +17,10 @@ export function LanguageSwitcher() {
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsOpen(false);
       }
     }
@@ -68,12 +71,16 @@ export function LanguageSwitcher() {
               key={loc}
               onClick={() => switchLocale(loc)}
               className={`flex w-full items-center gap-2 px-4 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                locale === loc ? 'font-semibold text-blue-600 dark:text-blue-400' : ''
+                locale === loc
+                  ? 'font-semibold text-blue-600 dark:text-blue-400'
+                  : ''
               }`}
             >
               {t(loc)}
               {locale === loc && (
-                <span className="ml-auto text-blue-600 dark:text-blue-400">✓</span>
+                <span className="ml-auto text-blue-600 dark:text-blue-400">
+                  ✓
+                </span>
               )}
             </button>
           ))}

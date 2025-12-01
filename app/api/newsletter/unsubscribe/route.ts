@@ -9,7 +9,9 @@ export async function GET(request: NextRequest) {
     const token = searchParams.get('token');
 
     if (!token) {
-      return NextResponse.redirect(new URL('/newsletter/error?reason=missing_token', request.url));
+      return NextResponse.redirect(
+        new URL('/newsletter/error?reason=missing_token', request.url)
+      );
     }
 
     const subscriber = await prisma.subscriber.findUnique({
@@ -17,11 +19,15 @@ export async function GET(request: NextRequest) {
     });
 
     if (!subscriber) {
-      return NextResponse.redirect(new URL('/newsletter/error?reason=invalid_token', request.url));
+      return NextResponse.redirect(
+        new URL('/newsletter/error?reason=invalid_token', request.url)
+      );
     }
 
     if (subscriber.unsubscribedAt) {
-      return NextResponse.redirect(new URL('/newsletter/already-unsubscribed', request.url));
+      return NextResponse.redirect(
+        new URL('/newsletter/already-unsubscribed', request.url)
+      );
     }
 
     // 取消订阅
@@ -32,9 +38,13 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.redirect(new URL('/newsletter/unsubscribed', request.url));
+    return NextResponse.redirect(
+      new URL('/newsletter/unsubscribed', request.url)
+    );
   } catch (error) {
     console.error('Newsletter unsubscribe error:', error);
-    return NextResponse.redirect(new URL('/newsletter/error?reason=server_error', request.url));
+    return NextResponse.redirect(
+      new URL('/newsletter/error?reason=server_error', request.url)
+    );
   }
 }
