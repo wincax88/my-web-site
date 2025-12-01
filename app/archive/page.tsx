@@ -1,7 +1,9 @@
 import Link from 'next/link';
-import { formatDate } from '@/lib/utils';
 import { getPostsArchiveFormatted } from '@/lib/mdx';
 import type { Metadata } from 'next';
+
+// ISR: 每 60 秒重新验证
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: '文章归档',

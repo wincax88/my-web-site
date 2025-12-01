@@ -4,6 +4,7 @@ import './globals.css';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { Providers } from '@/components/Providers';
+import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-geist-sans' });
 
@@ -33,6 +34,15 @@ export const metadata: Metadata = {
   authors: [{ name: 'Michael Wong' }],
   creator: 'Michael Wong',
   publisher: 'Michael Wong',
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: siteName,
+  },
+  formatDetection: {
+    telephone: false,
+  },
   alternates: {
     canonical: siteUrl,
     types: {
@@ -139,6 +149,7 @@ export default function RootLayout({
       </head>
       <body className={inter.variable}>
         <Providers>
+          <ServiceWorkerRegistration />
           <div className="flex min-h-screen flex-col">
             <Navbar />
             <main className="flex-1">{children}</main>

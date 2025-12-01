@@ -142,11 +142,23 @@
 >   - `app/blog/[slug]/loading.tsx` - 文章详情加载态
 >   - `app/courses/loading.tsx` - 课程列表加载态
 
-### 8. SEO 和性能
+### 8. SEO 和性能 ✅ 已完成
 
-- [ ] 配置 Next.js Image 优化
-- [ ] 添加 PWA 支持
-- [ ] 实现增量静态再生成 (ISR) 优化
+- [x] 配置 Next.js Image 优化
+- [x] 添加 PWA 支持
+- [x] 实现增量静态再生成 (ISR) 优化
+
+> **实现说明**:
+> - Next.js Image 优化：配置 AVIF/WebP 格式、响应式尺寸、30 天缓存
+> - PWA 支持：创建 manifest.json、Service Worker、离线页面
+> - ISR 优化：博客、文章、课程、归档页面均配置 60 秒重新验证
+> - 相关文件：
+>   - `next.config.mjs` - Image 优化配置
+>   - `public/manifest.json` - PWA 清单
+>   - `public/sw.js` - Service Worker
+>   - `app/offline/page.tsx` - 离线页面
+>   - `components/ServiceWorkerRegistration.tsx` - SW 注册组件
+>   - 各页面添加 `export const revalidate = 60`
 
 ### 9. 社交功能
 
@@ -167,8 +179,8 @@
 |------|------|--------|----------|
 | 安全问题 | 7 | 7 | 🔴 高 ✅ |
 | 功能缺失 | 12 | 14 | 🟡 中 ✅ |
-| 体验优化 | 8 | 6 | 🟢 低 |
-| **总计** | **27** | **27** | - |
+| 体验优化 | 8 | 9 | 🟢 低 ✅ |
+| **总计** | **27** | **30** | - |
 
 ---
 
@@ -280,3 +292,20 @@
     - `app/blog/loading.tsx` - 博客列表加载态
     - `app/blog/[slug]/loading.tsx` - 文章详情加载态
     - `app/courses/loading.tsx` - 课程列表加载态
+
+- ✅ 完成 SEO 和性能优化
+  - Next.js Image 优化配置（AVIF/WebP 格式、响应式尺寸、30 天缓存）
+  - PWA 支持（manifest.json、Service Worker、离线页面）
+  - ISR 增量静态再生成（博客、文章、课程、归档页面每 60 秒重新验证）
+  - 新增文件：
+    - `next.config.mjs` - 更新 Image 优化配置
+    - `public/manifest.json` - PWA 清单文件
+    - `public/sw.js` - Service Worker
+    - `app/offline/page.tsx` - 离线页面
+    - `components/ServiceWorkerRegistration.tsx` - SW 注册组件
+  - 修改文件：
+    - `app/layout.tsx` - 添加 PWA 元数据和 SW 注册
+    - `app/blog/page.tsx` - 添加 ISR revalidate
+    - `app/blog/[slug]/page.tsx` - 添加 ISR revalidate
+    - `app/courses/page.tsx` - 添加 ISR revalidate
+    - `app/archive/page.tsx` - 添加 ISR revalidate

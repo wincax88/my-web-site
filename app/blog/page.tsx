@@ -4,6 +4,9 @@ import { getPaginatedPosts } from '@/lib/mdx';
 import { formatDate } from '@/lib/utils';
 import type { Metadata } from 'next';
 
+// ISR: 每 60 秒重新验证
+export const revalidate = 60;
+
 export async function generateMetadata({
   searchParams,
 }: {

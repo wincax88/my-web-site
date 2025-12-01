@@ -19,6 +19,9 @@ import { BackToTop } from '@/components/BackToTop';
 import { BookmarkButton } from '@/components/BookmarkButton';
 import type { Metadata } from 'next';
 
+// ISR: 每 60 秒重新验证
+export const revalidate = 60;
+
 // 准备 rehype 插件配置
 const rehypePlugins = [
   rehypeSlug,

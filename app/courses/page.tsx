@@ -5,6 +5,9 @@ import { prisma } from '@/lib/prisma';
 import { Clock, BookOpen, GraduationCap } from 'lucide-react';
 import { LEVEL_LABELS, LEVEL_COLORS, CourseLevel } from '@/types/course';
 
+// ISR: 每 60 秒重新验证
+export const revalidate = 60;
+
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
 
 export const metadata: Metadata = {
