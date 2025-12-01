@@ -12,6 +12,8 @@ import { CodeBlock } from '@/components/CodeBlock';
 import { Mermaid } from '@/components/Mermaid';
 import { Comments } from '@/components/Comments';
 import { ViewCounter } from '@/components/ViewCounter';
+import { RelatedPosts } from '@/components/RelatedPosts';
+import { LikeButton } from '@/components/LikeButton';
 import type { Metadata } from 'next';
 
 // 准备 rehype 插件配置
@@ -257,12 +259,15 @@ export default async function BlogPostPage({
 }: {
   params: { slug: string };
 }) {
-  const { getPostBySlug } = await import('@/lib/mdx');
+  const { getPostBySlug, getRelatedPosts } = await import('@/lib/mdx');
   const post = await getPostBySlug(params.slug);
 
   if (!post) {
     notFound();
   }
+
+  // 获取相关文章
+  const relatedPosts = await getRelatedPosts(post.slug, post.tags, 4);
 
   const headings = post.content ? extractHeadings(post.content) : [];
   const mdxComponents = createMdxComponents();
@@ -399,11 +404,16 @@ export default async function BlogPostPage({
             )}
           </div>
 
-          <ShareButtons
-            title={post.title}
-            url={postUrl}
-            description={post.description}
-          />
+          <div className="mt-8 flex flex-wrap items-center gap-4 border-t border-gray-200 pt-6 dark:border-gray-800">
+            <LikeButton slug={post.slug} />
+            <ShareButtons
+              title={post.title}
+              url={postUrl}
+              description={post.description}
+            />
+          </div>
+
+          <RelatedPosts posts={relatedPosts} />
 
           <Comments slug={post.slug} />
         </article>

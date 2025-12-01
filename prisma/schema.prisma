@@ -21,6 +21,7 @@ model Post {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   views       Int       @default(0)
+  likes       Int       @default(0) // 点赞数
   comments    Comment[]
 }
 

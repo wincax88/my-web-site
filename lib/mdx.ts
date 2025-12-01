@@ -281,3 +281,115 @@ export async function getPaginatedPosts(
     totalPages,
   };
 }
+
+// 获取相关文章（基于标签相似度）
+export async function getRelatedPosts(
+  currentSlug: string,
+  tags: string[] = [],
+  limit: number = 4
+): Promise<PostType[]> {
+  const allPosts = await getAllPosts();
+
+  // 排除当前文章
+  const otherPosts = allPosts.filter((post) => post.slug !== currentSlug);
+
+  if (tags.length === 0) {
+    // 没有标签时返回最新文章
+    return otherPosts.slice(0, limit);
+  }
+
+  // 计算每篇文章与当前文章的标签相似度
+  const postsWithScore = otherPosts.map((post) => {
+    const postTags = post.tags || [];
+    const commonTags = tags.filter((tag) => postTags.includes(tag));
+    return {
+      post,
+      score: commonTags.length,
+    };
+  });
+
+  // 按相似度排序，相同相似度按日期排序
+  postsWithScore.sort((a, b) => {
+    if (b.score !== a.score) {
+      return b.score - a.score;
+    }
+    return new Date(b.post.date).getTime() - new Date(a.post.date).getTime();
+  });
+
+  return postsWithScore.slice(0, limit).map((item) => item.post);
+}
+
+// 获取文章归档（按年月分组）
+export async function getPostsArchive(): Promise<
+  Map<string, Map<string, PostType[]>>
+> {
+  const allPosts = await getAllPosts();
+  const archive = new Map<string, Map<string, PostType[]>>();
+
+  allPosts.forEach((post) => {
+    const date = new Date(post.date);
+    const year = date.getFullYear().toString();
+    const month = (date.getMonth() + 1).toString().padStart(2, '0');
+
+    if (!archive.has(year)) {
+      archive.set(year, new Map());
+    }
+
+    const yearMap = archive.get(year)!;
+    if (!yearMap.has(month)) {
+      yearMap.set(month, []);
+    }
+
+    yearMap.get(month)!.push(post);
+  });
+
+  return archive;
+}
+
+// 将归档转换为可序列化的格式
+export async function getPostsArchiveFormatted(): Promise<
+  Array<{
+    year: string;
+    months: Array<{
+      month: string;
+      posts: PostType[];
+    }>;
+    totalPosts: number;
+  }>
+> {
+  const archive = await getPostsArchive();
+  const result: Array<{
+    year: string;
+    months: Array<{
+      month: string;
+      posts: PostType[];
+    }>;
+    totalPosts: number;
+  }> = [];
+
+  // 按年份降序排列
+  const sortedYears = Array.from(archive.keys()).sort((a, b) =>
+    b.localeCompare(a)
+  );
+
+  for (const year of sortedYears) {
+    const yearMap = archive.get(year)!;
+    const months: Array<{ month: string; posts: PostType[] }> = [];
+
+    // 按月份降序排列
+    const sortedMonths = Array.from(yearMap.keys()).sort((a, b) =>
+      b.localeCompare(a)
+    );
+
+    let totalPosts = 0;
+    for (const month of sortedMonths) {
+      const posts = yearMap.get(month)!;
+      months.push({ month, posts });
+      totalPosts += posts.length;
+    }
+
+    result.push({ year, months, totalPosts });
+  }
+
+  return result;
+}
