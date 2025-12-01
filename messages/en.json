@@ -1,0 +1,182 @@
+{
+  "site": {
+    "name": "FuncLog",
+    "description": "Programming tutorials and tech blog, sharing the latest technology trends and development experience"
+  },
+  "nav": {
+    "home": "Home",
+    "blog": "Blog",
+    "courses": "Courses",
+    "archive": "Archive",
+    "bookmarks": "Bookmarks",
+    "projects": "Projects",
+    "about": "About",
+    "admin": "Admin",
+    "search": "Search",
+    "toggleMenu": "Toggle menu"
+  },
+  "home": {
+    "title": "Home",
+    "welcome": "Welcome to FuncLog",
+    "subtitle": "Sharing programming tutorials, tech blogs, and development experience",
+    "browseBlog": "Browse Blog",
+    "viewCourses": "View Courses",
+    "techBlog": "Tech Blog",
+    "techBlogDesc": "Sharing the latest technology trends and development experience",
+    "tutorials": "Tutorials",
+    "tutorialsDesc": "Systematic learning paths and practical guides",
+    "bestPractices": "Best Practices",
+    "bestPracticesDesc": "Summarizing lessons learned from development",
+    "featuredPosts": "Featured Posts",
+    "latestPosts": "Latest Posts",
+    "viewAll": "View All",
+    "tagCloud": "Tag Cloud"
+  },
+  "blog": {
+    "title": "Blog",
+    "description": "Browse all tech blog posts and learn about the latest programming tutorials and development experience",
+    "noPosts": "No posts yet",
+    "readingTime": "Reading time",
+    "publishedAt": "Published",
+    "updatedAt": "Updated",
+    "views": "views",
+    "likes": "likes",
+    "prevPage": "Previous",
+    "nextPage": "Next",
+    "page": "Page {page}",
+    "noContent": "No content",
+    "notFound": "Post not found",
+    "relatedPosts": "Related Posts",
+    "share": "Share",
+    "copyLink": "Copy link",
+    "linkCopied": "Link copied"
+  },
+  "courses": {
+    "title": "Courses",
+    "description": "Systematic programming courses, from beginner to advanced",
+    "noCourses": "No courses yet",
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "lessons": "lessons",
+    "duration": "min",
+    "progress": "Progress",
+    "startLearning": "Start Learning",
+    "continueLearning": "Continue Learning",
+    "completed": "Completed",
+    "prevLesson": "Previous Lesson",
+    "nextLesson": "Next Lesson",
+    "backToCourse": "Back to Course",
+    "markComplete": "Mark as Complete",
+    "markIncomplete": "Mark as Incomplete"
+  },
+  "archive": {
+    "title": "Archive",
+    "description": "Browse all posts by date",
+    "totalPosts": "{count} posts in total",
+    "year": "{year}",
+    "postsInYear": "{count} posts"
+  },
+  "bookmarks": {
+    "title": "Bookmarks",
+    "description": "Your bookmarked articles",
+    "noBookmarks": "No bookmarks yet",
+    "noBookmarksDesc": "Browse blog posts and click the bookmark button to save your favorite content",
+    "browseArticles": "Browse Articles",
+    "bookmark": "Bookmark",
+    "bookmarked": "Bookmarked",
+    "removeBookmark": "Remove Bookmark"
+  },
+  "projects": {
+    "title": "Projects",
+    "description": "My open source projects and portfolio"
+  },
+  "about": {
+    "title": "About",
+    "description": "Learn more about me"
+  },
+  "search": {
+    "title": "Search",
+    "placeholder": "Search posts...",
+    "noResults": "No results found",
+    "searching": "Searching..."
+  },
+  "comments": {
+    "title": "Comments",
+    "writeComment": "Write a comment...",
+    "authorName": "Name",
+    "submit": "Submit",
+    "submitting": "Submitting...",
+    "reply": "Reply",
+    "replyTo": "Reply to {name}",
+    "cancelReply": "Cancel reply",
+    "noComments": "No comments yet. Be the first to comment!",
+    "pendingApproval": "Pending approval",
+    "commentSuccess": "Comment submitted, pending approval",
+    "commentError": "Failed to submit comment, please try again"
+  },
+  "newsletter": {
+    "title": "Subscribe",
+    "description": "Get notified about new posts and tutorials",
+    "placeholder": "Enter your email",
+    "subscribe": "Subscribe",
+    "subscribing": "Subscribing...",
+    "success": "Subscribed! Please check your email for confirmation",
+    "error": "Subscription failed, please try again",
+    "confirmed": "Subscription Confirmed",
+    "confirmedDesc": "Your subscription has been confirmed. Thank you for subscribing!",
+    "unsubscribed": "Unsubscribed",
+    "unsubscribedDesc": "You have successfully unsubscribed",
+    "alreadyConfirmed": "Already Confirmed",
+    "alreadyUnsubscribed": "Already Unsubscribed",
+    "invalidToken": "Invalid confirmation link",
+    "backToHome": "Back to Home"
+  },
+  "footer": {
+    "about": "About",
+    "aboutDesc": "Sharing programming tutorials and tech blogs, documenting learning and growth.",
+    "quickLinks": "Quick Links",
+    "social": "Social",
+    "subscribeUpdates": "Subscribe",
+    "getLatestNews": "Get notified about new posts and tutorials",
+    "copyright": "© {year} FuncLog. All rights reserved."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "update": "Update",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "more": "More",
+    "less": "Less",
+    "all": "All",
+    "none": "None"
+  },
+  "theme": {
+    "light": "Light mode",
+    "dark": "Dark mode",
+    "system": "System",
+    "toggle": "Toggle theme"
+  },
+  "language": {
+    "switch": "Switch language",
+    "zh": "中文",
+    "en": "English"
+  },
+  "offline": {
+    "title": "Offline",
+    "description": "You are currently offline. Please check your network connection and try again.",
+    "retry": "Retry Connection"
+  },
+  "backToTop": "Back to Top",
+  "readingProgress": "Reading progress"
+}

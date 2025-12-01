@@ -179,10 +179,25 @@
 >   - `components/ShareButtons.tsx` - 更新为支持分享统计
 >   - `components/Footer.tsx` - 添加 Newsletter 订阅入口
 
-### 10. 国际化
+### 10. 国际化 ✅ 已完成
 
-- [ ] 添加多语言支持 (i18n)
-- [ ] 英文界面翻译
+- [x] 添加多语言支持 (i18n)
+- [x] 英文界面翻译
+
+> **实现说明**:
+> - 使用 next-intl 实现完整的国际化支持
+> - 支持中文（zh）和英文（en）两种语言
+> - 默认语言为中文，访问 /en/* 路径切换英文
+> - 语言切换器显示在导航栏
+> - 翻译覆盖：导航栏、页脚、首页、博客列表、收藏页面等核心组件
+> - 相关文件：
+>   - `i18n.ts` - i18n 配置
+>   - `middleware.ts` - 语言路由中间件
+>   - `navigation.ts` - 国际化导航助手
+>   - `messages/zh.json` - 中文翻译文件
+>   - `messages/en.json` - 英文翻译文件
+>   - `components/LanguageSwitcher.tsx` - 语言切换组件
+>   - `next.config.mjs` - 添加 withNextIntl 插件
 
 ---
 
@@ -192,10 +207,10 @@
 |------|------|--------|----------|
 | 安全问题 | 7 | 7 | 🔴 高 ✅ |
 | 功能缺失 | 12 | 14 | 🟡 中 ✅ |
-| 体验优化 | 13 | 11 | 🟢 低 🔄 |
-| **总计** | **32** | **32** | - |
+| 体验优化 | 13 | 13 | 🟢 低 ✅ |
+| **总计** | **32** | **34** | - |
 
-> 注：仅剩国际化功能（2 项）待实现
+> 🎉 所有功能已完成！
 
 ---
 
@@ -208,7 +223,7 @@
 1. **第一阶段**：~~修复安全漏洞~~ ✅ 全部完成
 2. **第二阶段**：~~完善核心功能（评论管理、文章增强）~~ ✅ 全部完成
 3. **第三阶段**：~~教程模块开发~~ ✅ 已完成
-4. **第四阶段**：~~体验优化~~ ✅ 已完成 / 国际化（待实现）
+4. **第四阶段**：~~体验优化~~ ✅ 已完成 / ~~国际化~~ ✅ 已完成
 
 ---
 
@@ -353,3 +368,25 @@
     - `prisma/schema.prisma` - 添加 Subscriber 和 ShareStats 模型
     - `components/ShareButtons.tsx` - 添加分享统计功能
     - `components/Footer.tsx` - 添加 Newsletter 订阅入口
+
+- ✅ 完成国际化功能
+  - 使用 next-intl 实现完整的国际化支持
+  - 支持中文（zh）和英文（en）两种语言
+  - 默认语言为中文，访问 /en/* 路径切换英文
+  - 语言切换器显示在导航栏
+  - 翻译覆盖核心组件：导航栏、页脚、首页、博客列表、收藏页面
+  - 新增文件：
+    - `i18n.ts` - i18n 配置
+    - `middleware.ts` - 语言路由中间件
+    - `navigation.ts` - 国际化导航助手
+    - `messages/zh.json` - 中文翻译文件（包含完整 UI 文本）
+    - `messages/en.json` - 英文翻译文件
+    - `components/LanguageSwitcher.tsx` - 语言切换组件
+  - 修改文件：
+    - `next.config.mjs` - 添加 withNextIntl 插件
+    - `app/layout.tsx` - 添加 NextIntlClientProvider
+    - `components/Navbar.tsx` - 使用翻译和语言切换器
+    - `components/Footer.tsx` - 使用翻译
+    - `app/page.tsx` - 使用服务端翻译
+    - `app/blog/page.tsx` - 使用服务端翻译
+    - `app/bookmarks/page.tsx` - 使用客户端翻译

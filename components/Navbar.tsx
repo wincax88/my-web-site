@@ -3,28 +3,32 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { Menu, X, Search } from 'lucide-react';
 import { ThemeToggle } from './ThemeToggle';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { LoginModal } from './LoginModal';
 import { cn } from '@/lib/utils';
 
 interface NavLink {
-  label: string;
+  key: string;
   href: string;
 }
 
 const navLinks: NavLink[] = [
-  { label: '首页', href: '/' },
-  { label: '博客', href: '/blog' },
-  { label: '教程', href: '/courses' },
-  { label: '归档', href: '/archive' },
-  { label: '收藏', href: '/bookmarks' },
-  { label: '项目', href: '/projects' },
-  { label: '关于', href: '/about' },
-  { label: '管理', href: '/admin/posts' },
+  { key: 'home', href: '/' },
+  { key: 'blog', href: '/blog' },
+  { key: 'courses', href: '/courses' },
+  { key: 'archive', href: '/archive' },
+  { key: 'bookmarks', href: '/bookmarks' },
+  { key: 'projects', href: '/projects' },
+  { key: 'about', href: '/about' },
+  { key: 'admin', href: '/admin/posts' },
 ];
 
 export function Navbar() {
+  const t = useTranslations('nav');
+  const tSite = useTranslations('site');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const router = useRouter();
@@ -50,20 +54,20 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="text-xl font-bold">
-            函数志
+            {tSite('name')}
           </Link>
 
           {/* Desktop Navigation */}
           <div className="hidden items-center gap-6 md:flex">
             {navLinks.map((link) => {
-              if (link.label === '管理') {
+              if (link.key === 'admin') {
                 return (
                   <button
                     key={link.href}
                     onClick={handleAdminClick}
                     className="text-gray-700 transition-colors hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
                   >
-                    {link.label}
+                    {t(link.key)}
                   </button>
                 );
               }
@@ -73,7 +77,7 @@ export function Navbar() {
                   href={link.href}
                   className="text-gray-700 transition-colors hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400"
                 >
-                  {link.label}
+                  {t(link.key)}
                 </Link>
               );
             })}
@@ -84,15 +88,16 @@ export function Navbar() {
             <Link
               href="/search"
               className="rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800"
-              aria-label="搜索"
+              aria-label={t('search')}
             >
               <Search className="h-5 w-5" />
             </Link>
+            <LanguageSwitcher />
             <ThemeToggle />
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 md:hidden"
-              aria-label="切换菜单"
+              aria-label={t('toggleMenu')}
             >
               {mobileMenuOpen ? (
                 <X className="h-5 w-5" />
@@ -112,7 +117,7 @@ export function Navbar() {
         >
           <div className="flex flex-col gap-2 pt-4">
             {navLinks.map((link) => {
-              if (link.label === '管理') {
+              if (link.key === 'admin') {
                 return (
                   <button
                     key={link.href}
@@ -123,7 +128,7 @@ export function Navbar() {
                     }}
                     className="rounded-lg px-4 py-2 text-left text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                   >
-                    {link.label}
+                    {t(link.key)}
                   </button>
                 );
               }
@@ -134,7 +139,7 @@ export function Navbar() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="rounded-lg px-4 py-2 text-gray-700 transition-colors hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                 >
-                  {link.label}
+                  {t(link.key)}
                 </Link>
               );
             })}

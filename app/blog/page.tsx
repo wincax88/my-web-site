@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { getTranslations } from 'next-intl/server';
 import { getPaginatedPosts } from '@/lib/mdx';
 import { formatDate } from '@/lib/utils';
 import type { Metadata } from 'next';
@@ -12,18 +13,18 @@ export async function generateMetadata({
 }: {
   searchParams: { page?: string };
 }): Promise<Metadata> {
+  const t = await getTranslations('blog');
   const currentPage = parseInt(searchParams.page || '1', 10);
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
-  const baseTitle = '博客';
-  const title =
-    currentPage > 1 ? `${baseTitle} - 第${currentPage}页` : baseTitle;
+  const baseTitle = t('title');
+  const title = currentPage > 1 ? `${baseTitle} - ${t('page', { page: currentPage })}` : baseTitle;
 
   return {
     title,
-    description: '浏览所有技术博客文章，了解最新的编程教程和开发经验',
+    description: t('description'),
     openGraph: {
       title,
-      description: '浏览所有技术博客文章，了解最新的编程教程和开发经验',
+      description: t('description'),
       type: 'website',
       url: `${siteUrl}/blog${currentPage > 1 ? `?page=${currentPage}` : ''}`,
     },
@@ -38,12 +39,13 @@ export default async function BlogPage({
 }: {
   searchParams: { page?: string };
 }) {
+  const t = await getTranslations('blog');
   const currentPage = parseInt(searchParams.page || '1', 10);
   const { posts, totalPages } = await getPaginatedPosts(currentPage, 10);
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="mb-8 text-4xl font-bold">博客</h1>
+      <h1 className="mb-8 text-4xl font-bold">{t('title')}</h1>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {posts.map((post) => (
@@ -100,7 +102,7 @@ export default async function BlogPage({
               href={`/blog?page=${currentPage - 1}`}
               className="rounded border border-gray-300 px-4 py-2 hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
             >
-              上一页
+              {t('prevPage')}
             </Link>
           )}
           {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -121,7 +123,7 @@ export default async function BlogPage({
               href={`/blog?page=${currentPage + 1}`}
               className="rounded border border-gray-300 px-4 py-2 hover:bg-gray-100 dark:border-gray-700 dark:hover:bg-gray-800"
             >
-              下一页
+              {t('nextPage')}
             </Link>
           )}
         </div>
@@ -129,7 +131,7 @@ export default async function BlogPage({
 
       {posts.length === 0 && (
         <div className="py-12 text-center">
-          <p className="text-gray-500 dark:text-gray-400">暂无文章</p>
+          <p className="text-gray-500 dark:text-gray-400">{t('noPosts')}</p>
         </div>
       )}
     </div>

@@ -1,8 +1,14 @@
+'use client';
+
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { Github, Twitter, Mail } from 'lucide-react';
 import { NewsletterForm } from './NewsletterForm';
 
 export function Footer() {
+  const t = useTranslations('footer');
+  const tNav = useTranslations('nav');
+  const tSite = useTranslations('site');
   const currentYear = new Date().getFullYear();
 
   return (
@@ -11,22 +17,22 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           {/* About */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold">关于</h3>
+            <h3 className="mb-4 text-lg font-semibold">{t('about')}</h3>
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              分享编程教程和技术博客，记录学习与成长。
+              {t('aboutDesc')}
             </p>
           </div>
 
           {/* Links */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold">链接</h3>
+            <h3 className="mb-4 text-lg font-semibold">{t('quickLinks')}</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link
                   href="/blog"
                   className="text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
                 >
-                  博客
+                  {tNav('blog')}
                 </Link>
               </li>
               <li>
@@ -34,7 +40,7 @@ export function Footer() {
                   href="/courses"
                   className="text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
                 >
-                  教程
+                  {tNav('courses')}
                 </Link>
               </li>
               <li>
@@ -42,7 +48,7 @@ export function Footer() {
                   href="/projects"
                   className="text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
                 >
-                  项目
+                  {tNav('projects')}
                 </Link>
               </li>
               <li>
@@ -50,7 +56,7 @@ export function Footer() {
                   href="/about"
                   className="text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
                 >
-                  关于
+                  {tNav('about')}
                 </Link>
               </li>
             </ul>
@@ -58,7 +64,7 @@ export function Footer() {
 
           {/* Social */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold">关注我</h3>
+            <h3 className="mb-4 text-lg font-semibold">{t('social')}</h3>
             <div className="flex gap-4">
               <a
                 href="https://github.com/Michael8968/my-web-site"
@@ -90,16 +96,16 @@ export function Footer() {
 
           {/* Newsletter */}
           <div>
-            <h3 className="mb-4 text-lg font-semibold">订阅更新</h3>
+            <h3 className="mb-4 text-lg font-semibold">{t('subscribeUpdates')}</h3>
             <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
-              获取最新文章和教程通知
+              {t('getLatestNews')}
             </p>
             <NewsletterForm compact />
           </div>
         </div>
 
         <div className="mt-8 border-t border-gray-200 pt-8 text-center text-sm text-gray-600 dark:border-gray-800 dark:text-gray-400">
-          <p>© {currentYear} 函数志. 保留所有权利.</p>
+          <p>{t('copyright', { year: currentYear })}</p>
         </div>
       </div>
     </footer>

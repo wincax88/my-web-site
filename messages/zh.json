@@ -1,0 +1,182 @@
+{
+  "site": {
+    "name": "函数志",
+    "description": "编程教程与技术博客，分享最新的技术趋势和开发经验"
+  },
+  "nav": {
+    "home": "首页",
+    "blog": "博客",
+    "courses": "教程",
+    "archive": "归档",
+    "bookmarks": "收藏",
+    "projects": "项目",
+    "about": "关于",
+    "admin": "管理",
+    "search": "搜索",
+    "toggleMenu": "切换菜单"
+  },
+  "home": {
+    "title": "首页",
+    "welcome": "欢迎来到函数志",
+    "subtitle": "分享编程教程、技术博客和开发经验",
+    "browseBlog": "浏览博客",
+    "viewCourses": "查看教程",
+    "techBlog": "技术博客",
+    "techBlogDesc": "分享最新的技术趋势和开发经验",
+    "tutorials": "编程教程",
+    "tutorialsDesc": "系统化的学习路径和实践指南",
+    "bestPractices": "最佳实践",
+    "bestPracticesDesc": "总结开发中的经验和教训",
+    "featuredPosts": "精选文章",
+    "latestPosts": "最新文章",
+    "viewAll": "查看全部",
+    "tagCloud": "标签云"
+  },
+  "blog": {
+    "title": "博客",
+    "description": "浏览所有技术博客文章，了解最新的编程教程和开发经验",
+    "noPosts": "暂无文章",
+    "readingTime": "阅读时长",
+    "publishedAt": "发布于",
+    "updatedAt": "更新于",
+    "views": "次阅读",
+    "likes": "点赞",
+    "prevPage": "上一页",
+    "nextPage": "下一页",
+    "page": "第{page}页",
+    "noContent": "暂无内容",
+    "notFound": "文章未找到",
+    "relatedPosts": "相关文章",
+    "share": "分享",
+    "copyLink": "复制链接",
+    "linkCopied": "链接已复制"
+  },
+  "courses": {
+    "title": "教程",
+    "description": "系统化的编程教程，从入门到精通",
+    "noCourses": "暂无教程",
+    "beginner": "入门",
+    "intermediate": "进阶",
+    "advanced": "高级",
+    "lessons": "课时",
+    "duration": "分钟",
+    "progress": "进度",
+    "startLearning": "开始学习",
+    "continueLearning": "继续学习",
+    "completed": "已完成",
+    "prevLesson": "上一课",
+    "nextLesson": "下一课",
+    "backToCourse": "返回课程",
+    "markComplete": "标记完成",
+    "markIncomplete": "取消完成"
+  },
+  "archive": {
+    "title": "归档",
+    "description": "按时间浏览所有文章",
+    "totalPosts": "共 {count} 篇文章",
+    "year": "{year} 年",
+    "postsInYear": "{count} 篇"
+  },
+  "bookmarks": {
+    "title": "收藏",
+    "description": "您收藏的文章",
+    "noBookmarks": "暂无收藏",
+    "noBookmarksDesc": "浏览博客文章并点击收藏按钮来保存您喜欢的内容",
+    "browseArticles": "浏览文章",
+    "bookmark": "收藏",
+    "bookmarked": "已收藏",
+    "removeBookmark": "取消收藏"
+  },
+  "projects": {
+    "title": "项目",
+    "description": "我的开源项目和作品集"
+  },
+  "about": {
+    "title": "关于",
+    "description": "了解更多关于我的信息"
+  },
+  "search": {
+    "title": "搜索",
+    "placeholder": "搜索文章...",
+    "noResults": "未找到相关结果",
+    "searching": "搜索中..."
+  },
+  "comments": {
+    "title": "评论",
+    "writeComment": "写下你的评论...",
+    "authorName": "昵称",
+    "submit": "提交评论",
+    "submitting": "提交中...",
+    "reply": "回复",
+    "replyTo": "回复 {name}",
+    "cancelReply": "取消回复",
+    "noComments": "暂无评论，来发表第一条评论吧！",
+    "pendingApproval": "评论待审核",
+    "commentSuccess": "评论提交成功，等待审核",
+    "commentError": "评论提交失败，请稍后重试"
+  },
+  "newsletter": {
+    "title": "订阅更新",
+    "description": "获取最新文章和教程通知",
+    "placeholder": "输入邮箱地址",
+    "subscribe": "订阅",
+    "subscribing": "订阅中...",
+    "success": "订阅成功！请查收确认邮件",
+    "error": "订阅失败，请稍后重试",
+    "confirmed": "订阅确认",
+    "confirmedDesc": "您的订阅已确认，感谢您的关注！",
+    "unsubscribed": "取消订阅",
+    "unsubscribedDesc": "您已成功取消订阅",
+    "alreadyConfirmed": "已经确认过了",
+    "alreadyUnsubscribed": "已经取消订阅了",
+    "invalidToken": "无效的确认链接",
+    "backToHome": "返回首页"
+  },
+  "footer": {
+    "about": "关于",
+    "aboutDesc": "分享编程教程和技术博客，记录学习与成长。",
+    "quickLinks": "快速链接",
+    "social": "社交媒体",
+    "subscribeUpdates": "订阅更新",
+    "getLatestNews": "获取最新文章和教程通知",
+    "copyright": "© {year} 函数志. 保留所有权利."
+  },
+  "common": {
+    "loading": "加载中...",
+    "error": "出错了",
+    "retry": "重试",
+    "back": "返回",
+    "save": "保存",
+    "cancel": "取消",
+    "delete": "删除",
+    "edit": "编辑",
+    "create": "创建",
+    "update": "更新",
+    "confirm": "确认",
+    "yes": "是",
+    "no": "否",
+    "close": "关闭",
+    "more": "更多",
+    "less": "收起",
+    "all": "全部",
+    "none": "无"
+  },
+  "theme": {
+    "light": "浅色模式",
+    "dark": "深色模式",
+    "system": "跟随系统",
+    "toggle": "切换主题"
+  },
+  "language": {
+    "switch": "切换语言",
+    "zh": "中文",
+    "en": "English"
+  },
+  "offline": {
+    "title": "离线状态",
+    "description": "您当前处于离线状态，请检查网络连接后重试。",
+    "retry": "重试连接"
+  },
+  "backToTop": "回到顶部",
+  "readingProgress": "阅读进度"
+}
