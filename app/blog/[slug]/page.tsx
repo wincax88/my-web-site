@@ -11,6 +11,7 @@ import { ShareButtons } from '@/components/ShareButtons';
 import { CodeBlock } from '@/components/CodeBlock';
 import { Mermaid } from '@/components/Mermaid';
 import { Comments } from '@/components/Comments';
+import { ViewCounter } from '@/components/ViewCounter';
 import type { Metadata } from 'next';
 
 // 准备 rehype 插件配置
@@ -356,6 +357,8 @@ export default async function BlogPostPage({
               )}
               <span>•</span>
               <span>{post.readingTime}</span>
+              <span>•</span>
+              <ViewCounter slug={post.slug} />
             </div>
             {post.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2">
