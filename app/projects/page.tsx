@@ -19,30 +19,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default async function ProjectsPage() {
-  // 通过 API 获取项目数据
-  let projects: Project[];
-  try {
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL ||
-      (process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : 'http://localhost:3000');
-    const res = await fetch(`${baseUrl}/api/projects`, {
-      next: { revalidate: 3600 }, // 缓存 1 小时
-    });
+// ISR: 每小时重新验证
+export const revalidate = 3600;
 
-    if (res.ok) {
-      projects = await res.json();
-    } else {
-      // 如果 API 失败，使用共享数据源作为后备
-      projects = await getProjects();
-    }
-  } catch (error) {
-    console.error('Error fetching projects from API:', error);
-    // 如果 API 失败，使用共享数据源作为后备
-    projects = await getProjects();
-  }
+export default async function ProjectsPage() {
+  // 直接获取项目数据（避免构建时 API 不可用的问题）
+  const projects = await getProjects();
 
   return (
     <div className="container mx-auto px-4 py-16">

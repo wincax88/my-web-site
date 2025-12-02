@@ -1,5 +1,6 @@
 import { WifiOff } from 'lucide-react';
 import Link from 'next/link';
+import { ReloadButton } from './ReloadButton';
 
 export const metadata = {
   title: '离线 - 函数志',
@@ -17,12 +18,7 @@ export default function OfflinePage() {
         请检查您的网络连接后重试。部分已访问的页面可能仍可从缓存中查看。
       </p>
       <div className="flex gap-4">
-        <button
-          onClick={() => window.location.reload()}
-          className="rounded-lg bg-blue-600 px-6 py-3 text-white transition-colors hover:bg-blue-700"
-        >
-          重新加载
-        </button>
+        <ReloadButton />
         <Link
           href="/"
           className="rounded-lg border border-gray-300 px-6 py-3 text-gray-700 transition-colors hover:bg-gray-100 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800"
