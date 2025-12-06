@@ -30,15 +30,7 @@ const nextConfig = {
     },
   },
   webpack: (config, { isServer }) => {
-    if (isServer) {
-      // 外部化 ws 和相关模块，避免 webpack 打包原生依赖
-      config.externals = config.externals || [];
-      config.externals.push({
-        ws: 'commonjs ws',
-        bufferutil: 'commonjs bufferutil',
-        'utf-8-validate': 'commonjs utf-8-validate',
-      });
-    } else {
+    if (!isServer) {
       // 客户端配置：确保 lunr 正确打包
       config.resolve.fallback = {
         ...config.resolve.fallback,

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { put } from '@vercel/blob';
 import path from 'path';
 import sharp from 'sharp';
 import { requireAdminAuth } from '@/lib/auth-utils';
+import { uploadFile } from '@/lib/tcb';
 
 // 强制动态渲染
 export const dynamic = 'force-dynamic';
@@ -213,31 +213,13 @@ export async function POST(request: NextRequest) {
         : originalExtension;
     const fileName = `${timestamp}-${randomString}${finalExtension}`;
 
-    // 确定 MIME 类型
-    let contentType: string;
-    if (finalExtension === '.webp') {
-      contentType = 'image/webp';
-    } else if (finalExtension === '.jpg' || finalExtension === '.jpeg') {
-      contentType = 'image/jpeg';
-    } else if (finalExtension === '.png') {
-      contentType = 'image/png';
-    } else if (finalExtension === '.gif') {
-      contentType = 'image/gif';
-    } else {
-      contentType = file.type || 'image/jpeg';
-    }
-
-    // 使用 Vercel Blob Storage 保存文件
-    let blobUrl: string;
+    // 使用 TCB 云存储保存文件
+    let fileUrl: string;
     try {
-      const blob = await put(`covers/${fileName}`, buffer, {
-        contentType,
-        access: 'public',
-      });
-      blobUrl = blob.url;
-      console.log('[Upload API] 文件已上传到 Blob Storage:', blobUrl);
+      fileUrl = await uploadFile(`covers/${fileName}`, buffer);
+      console.log('[Upload API] 文件已上传到 TCB 云存储:', fileUrl);
     } catch (error) {
-      console.error('Error uploading to Blob Storage:', error);
+      console.error('Error uploading to TCB Storage:', error);
       const errorMessage = error instanceof Error ? error.message : '未知错误';
       return NextResponse.json(
         {
@@ -248,9 +230,6 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-
-    // 返回文件 URL
-    const fileUrl = blobUrl;
 
     const finalSize = buffer.length;
     const originalSize = file.size;

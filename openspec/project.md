@@ -9,11 +9,12 @@
 - **框架**: Next.js 14 (App Router)
 - **语言**: TypeScript
 - **UI**: React 18, Tailwind CSS, Lucide Icons
-- **数据库**: PostgreSQL (Neon Serverless) + Prisma ORM
+- **数据库**: MySQL (腾讯云 TCB) + Prisma ORM
+- **存储**: 腾讯云 TCB 云存储（封面图片上传）
+- **部署**: 腾讯云 CloudBase (TCB)
 - **内容**: MDX (next-mdx-remote), gray-matter, reading-time
 - **搜索**: Lunr.js 全文搜索
 - **AI**: OpenAI API (支持自定义 BaseURL，如 DeepSeek)
-- **存储**: Vercel Blob Storage（封面图片上传）
 - **测试**: Vitest + Testing Library
 - **代码风格**: ESLint, Prettier
 
@@ -61,15 +62,14 @@
 ## Important Constraints
 
 - 必须支持中文内容和界面
-- 使用 Neon Serverless PostgreSQL，需要配置 `DATABASE_URL` 环境变量
+- 使用腾讯云 TCB MySQL，需要配置 `DATABASE_URL` 环境变量
+- TCB 云存储需要配置 `TCB_ENV_ID`、`TCB_SECRET_ID`、`TCB_SECRET_KEY`
 - AI 功能需要配置 `OPENAI_API_KEY` 和可选的 `OPENAI_BASE_URL`
-- 图片上传使用 Vercel Blob Storage
 - 管理后台使用简单的 session 认证（sessionStorage）
 
 ## External Dependencies
 
-- **Neon PostgreSQL**: 数据库托管服务
-- **Vercel Blob**: 图片文件存储
+- **腾讯云 TCB**: 云托管、MySQL 数据库、云存储
 - **OpenAI API / DeepSeek**: AI 内容润色和生成
 - **RSS/Sitemap**: 自动生成 `/rss.xml` 和 `/sitemap.xml`
 
