@@ -5,6 +5,10 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 // 创建 Prisma Client，添加连接错误处理
+// 如果 DATABASE_URL 不存在，使用占位符（仅用于构建时）
+const databaseUrl =
+  process.env.DATABASE_URL || 'mysql://user:password@localhost:3306/db';
+
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({
@@ -15,7 +19,7 @@ export const prisma =
     // 添加连接超时和错误处理
     datasources: {
       db: {
-        url: process.env.DATABASE_URL,
+        url: databaseUrl,
       },
     },
   });

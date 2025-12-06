@@ -34,6 +34,9 @@ ENV NODE_ENV production
 RUN npx prisma generate
 
 # 构建 Next.js 应用
+# 注意：构建时需要 DATABASE_URL，但不会真正连接数据库
+# 提供一个占位符连接字符串用于构建
+ENV DATABASE_URL="mysql://user:password@localhost:3306/db"
 RUN \
   if [ -f yarn.lock ]; then yarn build; \
   elif [ -f package-lock.json ]; then npm run build; \
