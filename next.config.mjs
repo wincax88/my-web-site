@@ -10,6 +10,7 @@ const withNextIntl = createNextIntlPlugin();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'standalone',
+  basePath: '', // 明确设置为空字符串，避免 CloudBase Framework 自动创建错误的配置
   pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   images: {
     remotePatterns: [

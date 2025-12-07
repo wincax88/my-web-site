@@ -9,9 +9,9 @@
         "use": "@cloudbase/framework-plugin-next",
         "inputs": {
           "entry": "./",
-          "path": "/",
+          "path": "",
           "name": "funclog-next",
-          "buildCommand": "npm run build",
+          "buildCommand": "node scripts/build-with-fix.js",
           "functionOptions": {
             "timeout": 60,
             "memorySize": 512,
