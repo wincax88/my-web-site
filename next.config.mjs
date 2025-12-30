@@ -76,4 +76,3 @@ const withMDX = createMDX({
 });
 
 export default withNextIntl(withMDX(nextConfig));
-

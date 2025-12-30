@@ -100,7 +100,7 @@ export default async function RootLayout({
 }) {
   let locale: string;
   let messages: any;
-  
+
   try {
     locale = await getLocale();
     messages = await getMessages();
@@ -110,7 +110,7 @@ export default async function RootLayout({
     locale = 'zh';
     messages = (await import('../messages/zh.json')).default;
   }
-  
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
 
   // 网站结构化数据
