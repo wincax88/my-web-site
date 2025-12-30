@@ -1,4 +1,5 @@
-import { notFound } from 'next/navigation';
+// next-intl 配置文件
+// 这个文件用于 next-intl 插件自动发现配置
 import { getRequestConfig } from 'next-intl/server';
 
 export const locales = ['zh', 'en'] as const;

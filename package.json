@@ -23,7 +23,8 @@
     "db:migrate:deploy": "prisma migrate deploy",
     "db:studio": "prisma studio",
     "docker:build": "./scripts/docker-build.sh",
-    "docker:build:push": "./scripts/docker-build.sh latest push"
+    "docker:build:push": "./scripts/docker-build.sh latest push",
+    "deploy:tcb": "tcb framework deploy"
   },
   "dependencies": {
     "@cloudbase/node-sdk": "^2.0.0",

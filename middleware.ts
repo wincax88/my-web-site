@@ -1,10 +1,12 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import createMiddleware from 'next-intl/middleware';
+import { locales, defaultLocale } from './i18n';
 
-export function middleware(request: NextRequest) {
-  // Pass through all requests - i18n is handled at the component level
-  return NextResponse.next();
-}
+export default createMiddleware({
+  locales,
+  defaultLocale,
+  // 不使用路由前缀，所有语言使用相同路径
+  localePrefix: 'never',
+});
 
 export const config = {
   // Match all pathnames except for
