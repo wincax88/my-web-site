@@ -4,6 +4,11 @@ import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypePrettyCode from 'rehype-pretty-code';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 // next-intl 配置文件路径
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
@@ -43,11 +48,17 @@ const nextConfig = {
       };
     }
     // 确保不覆盖 next-intl 的别名
-    if (config.resolve && config.resolve.alias && !config.resolve.alias['next-intl/config']) {
+    if (
+      config.resolve &&
+      config.resolve.alias &&
+      !config.resolve.alias['next-intl/config']
+    ) {
       // 如果 next-intl 的别名不存在，说明插件可能没有正确设置
       // 这里我们手动设置（但通常不应该需要）
-      const path = await import('path');
-      const filePath = path.resolve(config.context || process.cwd(), './i18n/request.ts');
+      const filePath = path.resolve(
+        config.context || process.cwd(),
+        './i18n/request.ts'
+      );
       config.resolve.alias['next-intl/config'] = filePath;
     }
     return config;

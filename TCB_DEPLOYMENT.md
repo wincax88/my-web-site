@@ -87,6 +87,7 @@ RECAPTCHA_SECRET_KEY="your-recaptcha-secret-key"
 4. 添加以下环境变量：
 
 **必需变量：**
+
 - `DATABASE_URL` - MySQL 数据库连接字符串
 - `TCB_ENV_ID` - TCB 环境 ID
 - `NEXTAUTH_SECRET` - NextAuth 密钥（随机字符串）
@@ -96,6 +97,7 @@ RECAPTCHA_SECRET_KEY="your-recaptcha-secret-key"
 - `ADMIN_PASSWORD_HASH` - 管理员密码哈希（使用 `scripts/hash-password.ts` 生成）
 
 **可选变量：**
+
 - `OPENAI_API_KEY` - OpenAI API 密钥（用于 AI 功能）
 - `RECAPTCHA_SECRET_KEY` - reCAPTCHA 密钥（用于评论验证）
 
@@ -251,4 +253,3 @@ yarn deploy:tcb
 - [TCB 官方文档](https://cloud.tencent.com/document/product/876)
 - [TCB Framework 文档](https://cloud.tencent.com/document/product/876/41440)
 - [Next.js 部署文档](https://nextjs.org/docs/deployment)
-

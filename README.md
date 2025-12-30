@@ -164,11 +164,13 @@ draft: false
 推荐使用腾讯云 CloudBase (TCB) 部署：
 
 1. **安装 TCB CLI**
+
    ```bash
    npm install -g @cloudbase/cli
    ```
 
 2. **登录 TCB**
+
    ```bash
    tcb login
    ```
@@ -189,6 +191,7 @@ draft: false
    - 详见 [TCB 部署指南](./TCB_DEPLOYMENT.md)
 
 7. **初始化数据库**
+
    ```bash
    yarn db:generate
    yarn db:push
