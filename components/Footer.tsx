@@ -108,6 +108,16 @@ export function Footer() {
 
         <div className="mt-8 border-t border-gray-200 pt-8 text-center text-sm text-gray-600 dark:border-gray-800 dark:text-gray-400">
           <p>{t('copyright', { year: currentYear })}</p>
+          <p className="mt-2">
+            <a
+              href="https://beian.miit.gov.cn"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 transition-colors hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400"
+            >
+              沪ICP备2025152105号-2
+            </a>
+          </p>
         </div>
       </div>
     </footer>

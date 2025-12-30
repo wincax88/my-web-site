@@ -98,8 +98,19 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const locale = await getLocale();
-  const messages = await getMessages();
+  let locale: string;
+  let messages: any;
+  
+  try {
+    locale = await getLocale();
+    messages = await getMessages();
+  } catch (error) {
+    // 如果 next-intl 配置加载失败，使用默认值
+    console.error('next-intl config error:', error);
+    locale = 'zh';
+    messages = (await import('../messages/zh.json')).default;
+  }
+  
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
 
   // 网站结构化数据

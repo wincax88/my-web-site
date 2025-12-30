@@ -4,13 +4,9 @@ import remarkGfm from 'remark-gfm';
 import rehypeSlug from 'rehype-slug';
 import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 import rehypePrettyCode from 'rehype-pretty-code';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // next-intl 配置文件路径
+// 尝试使用 i18n/request.ts，这是 next-intl 推荐的标准路径
 const withNextIntl = createNextIntlPlugin('./i18n/request.ts');
 
 /** @type {import('next').NextConfig} */
@@ -47,20 +43,7 @@ const nextConfig = {
         crypto: false,
       };
     }
-    // 确保不覆盖 next-intl 的别名
-    if (
-      config.resolve &&
-      config.resolve.alias &&
-      !config.resolve.alias['next-intl/config']
-    ) {
-      // 如果 next-intl 的别名不存在，说明插件可能没有正确设置
-      // 这里我们手动设置（但通常不应该需要）
-      const filePath = path.resolve(
-        config.context || process.cwd(),
-        './i18n/request.ts'
-      );
-      config.resolve.alias['next-intl/config'] = filePath;
-    }
+    // 移除手动设置 next-intl 别名，让插件自动处理
     return config;
   },
 };
@@ -93,3 +76,4 @@ const withMDX = createMDX({
 });
 
 export default withNextIntl(withMDX(nextConfig));
+
