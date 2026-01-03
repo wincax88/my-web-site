@@ -1,12 +1,22 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getPaginatedPosts } from '@/lib/mdx';
 import { formatDate } from '@/lib/utils';
 import type { Metadata } from 'next';
+import { routing } from '@/i18n/routing';
 
 // ISR: 每 60 秒重新验证
 export const revalidate = 60;
+
+type Props = {
+  params: Promise<{ locale: string }>;
+  searchParams: Promise<{ page?: string }>;
+};
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 export async function generateMetadata({
   searchParams,
@@ -37,13 +47,13 @@ export async function generateMetadata({
   };
 }
 
-export default async function BlogPage({
-  searchParams,
-}: {
-  searchParams: { page?: string };
-}) {
+export default async function BlogPage({ params, searchParams }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   const t = await getTranslations('blog');
-  const currentPage = parseInt(searchParams.page || '1', 10);
+  const resolvedSearchParams = await searchParams;
+  const currentPage = parseInt(resolvedSearchParams.page || '1', 10);
   const { posts, totalPages } = await getPaginatedPosts(currentPage, 10);
 
   return (

@@ -1,12 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { NextIntlClientProvider } from 'next-intl';
-import { getLocale, getMessages } from 'next-intl/server';
+import { getLocale } from 'next-intl/server';
 import './globals.css';
-import { Navbar } from '@/components/Navbar';
-import { Footer } from '@/components/Footer';
-import { Providers } from '@/components/Providers';
-import { ServiceWorkerRegistration } from '@/components/ServiceWorkerRegistration';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-geist-sans' });
 
@@ -85,12 +80,7 @@ export const metadata: Metadata = {
       'max-snippet': -1,
     },
   },
-  verification: {
-    // 可以添加 Google Search Console 和 Bing 验证
-    // google: 'your-google-verification-code',
-    // yandex: 'your-yandex-verification-code',
-    // yahoo: 'your-yahoo-verification-code',
-  },
+  verification: {},
 };
 
 export default async function RootLayout({
@@ -98,82 +88,16 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let locale: string;
-  let messages: any;
-
+  let locale = 'zh';
   try {
     locale = await getLocale();
-    messages = await getMessages();
-  } catch (error) {
-    // 如果 next-intl 配置加载失败，使用默认值
-    console.error('next-intl config error:', error);
-    locale = 'zh';
-    messages = (await import('../messages/zh.json')).default;
+  } catch {
+    // Use default locale
   }
-
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://yourname.dev';
-
-  // 网站结构化数据
-  const websiteSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'WebSite',
-    name: '函数志',
-    url: siteUrl,
-    description: '编程教程与技术博客，分享最新的技术趋势和开发经验',
-    publisher: {
-      '@type': 'Person',
-      name: 'Michael Wong',
-      url: 'https://github.com/Michael8968',
-    },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${siteUrl}/search?q={search_term_string}`,
-      },
-      'query-input': 'required name=search_term_string',
-    },
-  };
-
-  // 组织/个人结构化数据
-  const organizationSchema = {
-    '@context': 'https://schema.org',
-    '@type': 'Person',
-    name: 'Michael Wong',
-    url: siteUrl,
-    sameAs: ['https://github.com/Michael8968', 'https://twitter.com/Wincax1'],
-    jobTitle: 'Web Developer',
-    description: '热爱编程的开发者，专注于 Web 开发和现代前端技术',
-  };
 
   return (
     <html lang={locale === 'zh' ? 'zh-CN' : 'en'} suppressHydrationWarning>
-      <head>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(websiteSchema),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema),
-          }}
-        />
-      </head>
-      <body className={inter.variable}>
-        <NextIntlClientProvider messages={messages}>
-          <Providers>
-            <ServiceWorkerRegistration />
-            <div className="flex min-h-screen flex-col">
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-          </Providers>
-        </NextIntlClientProvider>
-      </body>
+      <body className={inter.variable}>{children}</body>
     </html>
   );
 }

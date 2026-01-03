@@ -1,9 +1,18 @@
 import Link from 'next/link';
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { getAllPosts, getAllTags } from '@/lib/mdx';
 import { Card } from '@/components/Card';
 import { ArrowRight, BookOpen, Code, Lightbulb } from 'lucide-react';
 import type { Metadata } from 'next';
+import { routing } from '@/i18n/routing';
+
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('home');
@@ -23,7 +32,10 @@ export async function generateMetadata(): Promise<Metadata> {
   };
 }
 
-export default async function Home() {
+export default async function Home({ params }: Props) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   const t = await getTranslations('home');
   const tSite = await getTranslations('site');
 

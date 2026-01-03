@@ -1,12 +1,7 @@
 import createMiddleware from 'next-intl/middleware';
-import { locales, defaultLocale } from './i18n';
+import { routing } from './i18n/routing';
 
-export default createMiddleware({
-  locales,
-  defaultLocale,
-  // 不使用路由前缀，所有语言使用相同路径
-  localePrefix: 'never',
-});
+export default createMiddleware(routing);
 
 export const config = {
   // Match all pathnames except for
